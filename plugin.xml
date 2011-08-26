@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            id="ArduinoPlugin.ArduinoProjectCategory"
+            name="Arduino Projects">
+      </category>
+      <wizard
+            category="ArduinoPlugin.ArduinoProjectCategory"
+            class="arduinoplugin.wizards.NewProjectWizard"
+            finalPerspective="org.eclipse.cdt.ui.CPerspective"
+            hasPages="true"
+            id="ArduinoPlugin.newProjectWizard"
+            name="Arduino"
+            project="true">
+      </wizard>
+   </extension>
+   <extension
+         id="arduinoplugin.ProjectNature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="arduinoplugin.natures.ArduinoProjectNature">
+         </run>
+      </runtime>
+      <builder
+            id="arduinoplugin.builders.ArduinoBuilder">
+      </builder>
+   </extension>
+   <extension
+         id="arduinoplugin.builders.ArduinoBuilder"
+         name="ArduinoBuilder"
+         point="org.eclipse.core.resources.builders">
+      <builder
+            hasNature="true">
+         <run
+               class="arduinoplugin.builders.ArduinoProjectBuilder">
+         </run>
+      </builder>
+   </extension>
+
+</plugin>

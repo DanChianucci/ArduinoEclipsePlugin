@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: ArduinoPlugin
+Bundle-SymbolicName: ArduinoPlugin;singleton:=true
+Bundle-Activator: arduinoplugin.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources;bundle-version="3.7.100",
+ org.eclipse.cdt.core
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Version: 0.0.1.v887645834
+Import-Package: org.eclipse.ui.dialogs,
+ org.eclipse.ui.wizards.newresource
