@@ -13,7 +13,7 @@ Eventule Features include:
 	Import Arduino Project Wizard		-Not Started (EASY ONCE NEW PROJECT IS DONE)
 	Arduino Project Editor				-Not Started (EASY ONCE OTHER STUFF IS FIGURED OUT)
 	Custom Nature						-Completed for features so far
-	Arduino Builder						-Almost Completed
+	Arduino Builder						-Completed
 	Editor for pde files				-Not Started
 	Saved preferences					-Not Started
 
@@ -36,11 +36,13 @@ New Arduino Project Wizard:
 	So Far:	-New projects can be created
 			-Doesn't check if arduino directory is actually correct
 			-Doesn't read board.txt, so only custom boards and hardcoded arduino uno are allowed
-			-Only allows a small subset of processors... easy to fix just need a list of avr-gcc supported processors
+			-Only allows a small subset of processors... easy to fix just need a list of avr-gcc 
+                supported processors
 			-Doesn't save settings when completedd (stay in RAM)
 			
 Arduino Import Wizard:
-	What:	-Allows the user to import a project started in the arduino environment, or downloaded from the web
+	What:	-Allows the user to import a project started in the arduino environment, or downloaded 
+                from the web
 	
 	After:	- Will import all files in the imported folder to the project.	
 			- Will ask for the same settings that The new project creation Wizard asked for
@@ -55,7 +57,8 @@ Arduino Project Editor:
 	After:	 Project Wide Settings will be saved
 	
 	So Far: -Not Started
-			-Really will just need to make another instance of the settings page which is already being written 
+			-Really will just need to make another instance of the settings page which is already 
+                being written 
 				for the new project wizard
 	
 Custom Nature:
@@ -65,16 +68,13 @@ Custom Nature:
 	So Far: -Implements the arduino builder into the project
 
 Arduino Builder:
-	What:	-This Plugin uses code borrowed from the arduino IDE source so that it will compile code the same way
-				as the actual arduino code does
+	What:	-This Plugin uses code borrowed from the arduino IDE source so that it will compile 
+                code the same way as the actual arduino code does
 	After:  -Will be able to compile all projects that arduino IDE can
 			-Ability to just remake the project, or also remake the entire core library
 				(arduino remakes the core library every time).
 	
-	So Far:	-Can Build all projects as long as they don't import any libraries
-			-Outputs all files to a bin directory inside of the project folder
-			-Doesn't copy raw .c and .h files to the output folder
-				nor does it build them
+	So Far:	Completed bug testing phase
 		
 	
 Saved Preferences
@@ -84,8 +84,8 @@ Saved Preferences
 			-All settings are workspace wide
 		
 Editor for pde files:
-	What:	-with the plugin, pde files should be opened as if they were c files with highlighting enabled.
-				and auto completion
+	What:	-with the plugin, pde files should be opened as if they were c files with highlighting 
+                and auto completion enabled.
 	So Far:	-Not Started (probably somewhat easy to implement but i dont know how)
 
 
