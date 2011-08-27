@@ -37,9 +37,8 @@ public class Compiler implements MessageConsumer {
 	RunnerException exception;
 	private static String MCU = null;
 	private static String F_CPU = null;
-	
-	public Compiler() 
-	{
+
+	public Compiler() {
 	}
 
 	/**
@@ -105,7 +104,7 @@ public class Compiler implements MessageConsumer {
 					findFilesInFolder(libraryFolder, "S", false),
 					findFilesInFolder(libraryFolder, "c", false),
 					findFilesInFolder(libraryFolder, "cpp", false)));
-			
+
 			outputFolder = new File(outputFolder, "utility");
 			createFolder(outputFolder);
 			objectFiles.addAll(compileFiles(avrBasePath,
@@ -117,25 +116,31 @@ public class Compiler implements MessageConsumer {
 			includePaths.remove(includePaths.size() - 1);
 		}
 
-		// 3. compile the core, outputting .o files to <buildPath> and then
-		// collecting them into the core.a library file.
-		System.out.println("Compile the core .o files");
-		includePaths.clear();
-		includePaths.add(corePath); // include path for core only
-		List<File> coreObjectFiles = compileFiles(avrBasePath, buildPath,
-				includePaths, findFilesInPath(corePath, "S", true),
-				findFilesInPath(corePath, "c", true),
-				findFilesInPath(corePath, "cpp", true));
-
 		String runtimeLibraryName = buildPath + File.separator + "core.a";
-		List<String> baseCommandAR = new ArrayList<String>(
-				Arrays.asList(new String[] { avrBasePath + "avr-ar", "rcs",
-						runtimeLibraryName }));
-		for (File file : coreObjectFiles) {
-			List<String> commandAR = new ArrayList<String>(baseCommandAR);
-			commandAR.add(file.getAbsolutePath());
-			execAsynchronously(commandAR);
+		if(!(new File(runtimeLibraryName).exists()))
+		{
+			// 3. compile the core, outputting .o files to <buildPath> and then
+			// collecting them into the core.a library file.
+			System.out.println("Compile the core .o files");
+			includePaths.clear();
+			includePaths.add(corePath); // include path for core only
+			List<File> coreObjectFiles = compileFiles(avrBasePath, buildPath,
+					includePaths, findFilesInPath(corePath, "S", true),
+					findFilesInPath(corePath, "c", true),
+					findFilesInPath(corePath, "cpp", true));
+
+			System.out.println("Link into the core.a stsic library");
+			List<String> baseCommandAR = new ArrayList<String>(
+					Arrays.asList(new String[] { avrBasePath + "avr-ar", "rcs",
+							runtimeLibraryName }));
+			for (File file : coreObjectFiles) {
+				List<String> commandAR = new ArrayList<String>(baseCommandAR);
+				commandAR.add(file.getAbsolutePath());
+				execAsynchronously(commandAR);
+			}
 		}
+		else
+			System.out.println("core.a already exists");
 
 		// 4. link it all together into the .elf file
 		System.out.println("link into elf");
@@ -367,7 +372,7 @@ public class Compiler implements MessageConsumer {
 						avrBasePath + "avr-gcc",
 						"-c", // compile, don't link
 						"-g", // include debugging info (so errors include line
-								// numbers)
+						// numbers)
 						"-assembler-with-cpp", "-mmcu=" + MCU,
 						"-DF_CPU=" + F_CPU, }));
 
@@ -386,14 +391,14 @@ public class Compiler implements MessageConsumer {
 
 		List<String> baseCommandCompiler = new ArrayList<String>(
 				Arrays.asList(new String[] { avrBasePath + "avr-gcc", "-c", // compile,
-																			// don't
-																			// link
+						// don't
+						// link
 						"-g", // include debugging info (so errors include line
-								// numbers)
-						"-O"+PluginBase.getOptimize(), // optimize for size
+						// numbers)
+						"-O" + PluginBase.getOptimize(), // optimize for size
 						"-w", // surpress all warnings
 						"-ffunction-sections", // place each function in its own
-												// section
+						// section
 						"-fdata-sections", "-mmcu=" + MCU, "-DF_CPU=" + F_CPU, }));
 
 		for (int i = 0; i < includePaths.size(); i++) {
@@ -411,17 +416,17 @@ public class Compiler implements MessageConsumer {
 
 		List<String> baseCommandCompilerCPP = new ArrayList<String>(
 				Arrays.asList(new String[] { avrBasePath + "avr-g++", "-c", // compile,
-																			// don't
-																			// link
+						// don't
+						// link
 						"-g", // include debugging info (so errors include line
-								// numbers)
-						"-O"+PluginBase.getOptimize(), // optimize for size
+						// numbers)
+						"-O" + PluginBase.getOptimize(), // optimize for size
 						"-w", // surpress all warnings
 						"-fno-exceptions", "-ffunction-sections", // place each
-																	// function
-																	// in its
-																	// own
-																	// section
+						// function
+						// in its
+						// own
+						// section
 						"-fdata-sections", "-mmcu=" + MCU, "-DF_CPU=" + F_CPU, }));
 
 		for (int i = 0; i < includePaths.size(); i++) {
