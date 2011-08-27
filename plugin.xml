@@ -28,6 +28,9 @@
       <builder
             id="arduinoplugin.builders.ArduinoBuilder">
       </builder>
+      <content-type
+            id="ArduinoPlugin.content-type2">
+      </content-type>
    </extension>
    <extension
          id="arduinoplugin.builders.ArduinoBuilder"
@@ -39,6 +42,21 @@
                class="arduinoplugin.builders.ArduinoProjectBuilder">
          </run>
       </builder>
+   </extension>
+   <extension
+         point="org.eclipse.core.contenttype.contentTypes">
+      <content-type
+            alias-for="org.eclipse.cdt.core.cSource"
+            base-type="org.eclipse.cdt.core.cSource"
+            file-extensions="pde"
+            id="ArduinoPlugin.PDEContentType"
+            name="PDE"
+            priority="normal">
+      </content-type>
+      <file-association
+            content-type="ArduinoPlugin.PDEContentType"
+            file-extensions="pde">
+      </file-association>
    </extension>
 
 </plugin>
