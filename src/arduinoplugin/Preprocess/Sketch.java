@@ -80,10 +80,8 @@ public class Sketch {
 		// get the name of the sketch by chopping .pde or .java
 		// off of the main file name
 		String mainFilename = primaryFile.getName();
-		System.out.println("Main FILE " + mainFilename);
 		int suffixLength = getDefaultExtension().length() + 1;
 		name = mainFilename.substring(0, mainFilename.length() - suffixLength);
-		System.out.println("NAME: " + name);
 		OutputFolder = new File(BuildPath);
 		folder = new File(primaryFile.getParent());
 		load();
@@ -299,10 +297,7 @@ public class Sketch {
 		importedLibraries = new ArrayList<File>();
 
 		for (String item : preprocessor.getExtraImports()) {
-			File libFolder = PluginBase.getLibraryFolder(item,folder);
-			if(libFolder == null)
-				System.out.println("couldn't find "+item);
-			
+			File libFolder = PluginBase.getLibraryFolder(item,folder);			
 			if (libFolder != null && !importedLibraries.contains(libFolder)) {
 				importedLibraries.add(libFolder);
 			}
