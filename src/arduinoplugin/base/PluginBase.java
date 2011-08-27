@@ -2,15 +2,13 @@ package arduinoplugin.base;
 
 import java.io.File;
 import org.eclipse.core.resources.ResourcesPlugin;
-
-import processing.app.Preferences;
 public class PluginBase 
 {	
-	private static String MCU = "atmega328p";
-	private static String FREQ = "16000000";
-	private static String PATH = "C:\\Users\\Dan\\Applications\\arduino-0022";
+	private static String MCU = "";
+	private static String FREQ = "";
+	private static String PATH = "";
 	private static String BOARD_TYPE = "";
-	private static String OPT = "s";
+	private static String OPT = "";
 	private static String UPLOAD_PROT = "";
 	private static String UPLOAD_BAUD = "";
 	
@@ -42,19 +40,15 @@ public class PluginBase
 		//TODO break out of the look completely if found==null
 		for (File file : folder.listFiles()) 
 		{
-			System.out.println(file.getAbsolutePath());
 			if (file.getName().startsWith("."))
-				continue; // skip hidden files
-			
+				continue; // skip hidden files			
 			if(found!= null) //&& found.getName().endsWith(name))
 			{	//barf up found to top recursive level
 				return found;
 			}
-
 			// If file has same name
 			if (file.getAbsolutePath().endsWith(name)) 
 			{
-				System.out.println("WooHOO, we found " + name);
 				found = file;
 				return found;
 			}
@@ -136,29 +130,17 @@ public class PluginBase
 		imported = imported.replace('/', File.separatorChar);
 		imported = imported.replace('\\',File.separatorChar);
 		
-		//Look in project folder 
-//		File lookinFolder = project;
-//		File foundFile = findFileInFolder(lookinFolder,imported, true);	
-		
-		//look in workspace libraries
-//		if (foundFile==null)
-//		{
+		//Lookin Workspacelib
 		File lookinFolder = new File(getWorkspaceLibPath());
 		File foundFile = findFileInFolder(lookinFolder,imported, true);	
-//		}
+
 		//look in arduino libs
 		if(foundFile == null)
 		{
 			lookinFolder = new File(getArduinoLibPath());
 			foundFile = findFileInFolder(lookinFolder,imported, true);
 		}
-//		//look in libc libs
-//		if(foundFile == null)
-//		{
-//			lookinFolder = new File(getAVRLibCPath());
-//			foundFile = findFileInFolder(lookinFolder,imported, true);			
-//		}
-//		
+
 		if(foundFile!=null)
 			return foundFile.getParentFile();	
 		else
@@ -184,16 +166,9 @@ public class PluginBase
 	public static void setArduinoPath(String nPATH){
 		PATH=nPATH;
 	}
-	public static void setBoardType(String nBT){
+	public static void setBoardType(String nBT)
+	{
 		BOARD_TYPE=nBT;
-		//TODO also set the mcu for each of the boards...
-		if(BOARD_TYPE.equals("ArduinoUNO"))
-		{
-			MCU="atmega328p";
-			FREQ="16000000";
-			UPLOAD_PROT="stk500";
-			UPLOAD_BAUD="115200";
-		}
 	}
 	public static void setFreq(String nFREQ)
 	{
@@ -262,7 +237,6 @@ public class PluginBase
 	          }
 	      } else {
 	        removeDir(dead);
-	        //dead.delete();
 	      }
 	    }
 	  }
