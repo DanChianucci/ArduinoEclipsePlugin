@@ -1,5 +1,10 @@
 package arduinoplugin.wizards.pages;
 
+import java.io.File;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizardPage;
@@ -19,35 +24,58 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import arduinoplugin.base.PluginBase;
+import arduinoplugin.base.Target;
 
-
+/**
+ * @author Dan
+ *
+ */
+/**
+ * @author Dan
+ * 
+ */
 public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 
 	final Shell shell = new Shell();
-	
-	Text ArduinoPathInput;
-	Button BrowseButton;	
-	Combo BoardType;
-	Combo Optimize;	
-	Combo ProcessorCombo;
-	Text ProcessorFrequency;	
-	Combo UploadProtocall;
-	Combo UploadBaud;
-    
+
+	private Text ArduinoPathInput;
+	private Button BrowseButton;
+	private Combo BoardType;
+	private Combo Optimize;
+	private Combo ProcessorCombo;
+	private Text ProcessorFrequency;
+	private Combo UploadProtocall;
+	private Combo UploadBaud;
+
+	private String ArduinoPath;
+
+	private Set<String> Boards = new HashSet<String>();
+	private String[] Processors = {"atmega328p"};//private Set<String> Processors = new HashSet<String>();
+
 	private Listener fieldModifyListener = new Listener() {
-        public void handleEvent(Event e) 
-        {          
-            setPageComplete(validatePage());                
-        }
-    };
-    private Listener BoardModifyListener = new Listener(){
-    	public void handleEvent(Event e)
-    	{
-    		 setEditableFields();
-    		 setPageComplete(validatePage());
-    	}
-    };
+		public void handleEvent(Event e) {
+			setPageComplete(validatePage());
+		}
+	};
+
+	private Listener pathModifyListener = new Listener() {
+		public void handleEvent(Event e) {
+			if (arduinoPathIsValid()) {
+				ArduinoPath = ArduinoPathInput.getText();
+				loadBoards();
+			}
+			setEditableFields();
+			setPageComplete(validatePage());
+		}
+	};
+
+	private Listener BoardModifyListener = new Listener() {
+		public void handleEvent(Event e) {
+			setEditableFields();
+			setOptionsForBoard();
+			setPageComplete(validatePage());
+		}
+	};
 
 	public ArduinoSettingsPage(String pageName) {
 		super(pageName);
@@ -64,9 +92,6 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 	@Override
 	public void createControl(Composite parent) {
 
-		
-		
-
 		// create the composite to hold the widgets
 		Composite composite = new Composite(parent, SWT.NULL);
 		initializeDialogUnits(parent);
@@ -78,16 +103,19 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 		composite.setLayout(gl);
 
 		// **********************************************************************************
-		// ******************************Arduino Environment*********************************
+		// ******************************Arduino
+		// Environment*********************************
 		// **********************************************************************************
-		new Label(composite, SWT.NONE).setText("Arduino Location");//TODO Find ArdEnv automatically
+		new Label(composite, SWT.NONE).setText("Arduino Location");// TODO Find
+																	// ArdEnv
+																	// automatically
 		ArduinoPathInput = new Text(composite, SWT.BORDER);
 		gd = new GridData();
 		gd.horizontalAlignment = SWT.FILL;
 		gd.horizontalSpan = (ncol - 2);
 		gd.grabExcessHorizontalSpace = true;
 		ArduinoPathInput.setLayoutData(gd);
-		ArduinoPathInput.addListener(SWT.Modify, fieldModifyListener);
+		ArduinoPathInput.addListener(SWT.Modify, pathModifyListener);
 
 		BrowseButton = new Button(composite, SWT.NONE);
 		BrowseButton.setText("Browse...");
@@ -109,11 +137,12 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 		gd = new GridData();
 		gd.horizontalAlignment = SWT.FILL;
 		BoardType.setLayoutData(gd);
-		String[] Boards = PluginBase.getBoardsArray();
-		BoardType.setItems(Boards);
-		BoardType.setText(Boards[0]);//TODO set to whatever was used last time;
-		BoardType.addListener(SWT.Modify,BoardModifyListener);
-		
+		// BoardType.setItems(Boards);//whatever was used last time
+		// BoardType.setText(Boards[0]);//TODO set to whatever was used last
+		// time;
+		BoardType.addListener(SWT.Selection, BoardModifyListener);
+		BoardType.setEnabled(false);
+
 		// **********************************************************************************
 		// ********************************Optimization*************************************
 		// **********************************************************************************
@@ -122,152 +151,206 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 		gd = new GridData();
 		gd.horizontalAlignment = SWT.FILL;
 		Optimize.setLayoutData(gd);
-		String OptimizeOptions[] = { "0","1", "2", "3", "s" };
+		String OptimizeOptions[] = { "0", "1", "2", "3", "s" };
 		Optimize.setItems(OptimizeOptions);
-		Optimize.setText("s");//TODO set to whatever is settings
-		
-		createLine(composite,ncol);
-		
-		
+		Optimize.setText("s");// TODO set to whatever is settings
+		Optimize.setEnabled(false);
+
+		createLine(composite, ncol);
+
 		// **********************************************************************************
-		// *********************************Processor Type***********************************
+		// *********************************Processor
+		// Type***********************************
 		// **********************************************************************************
-		
+
 		new Label(composite, SWT.NONE).setText("Processor:");
 		ProcessorCombo = new Combo(composite, SWT.BORDER | SWT.READ_ONLY);
 		gd = new GridData();
 		gd.horizontalAlignment = SWT.FILL;
 		gd.grabExcessHorizontalSpace = true;
 		ProcessorCombo.setLayoutData(gd);
-		String Processors[] = PluginBase.getProcessorArray();
+		//PluginBase.getProcessorArray();
 		ProcessorCombo.setItems(Processors);//TODO Make better list
-		ProcessorCombo.setText(Processors[0]);
-		ProcessorCombo.addListener(SWT.Modify,fieldModifyListener);
-		
+		//ProcessorCombo.setText(Processors[0]);
+		ProcessorCombo.addListener(SWT.Selection, fieldModifyListener);
+		ProcessorCombo.setEnabled(false);
+
 		// **********************************************************************************
-		// *********************************Processor Freq***********************************
+		// *********************************Processor
+		// Freq***********************************
 		// **********************************************************************************
-		new Label(composite, SWT.NONE).setText("Processor Frequency (Hz):");//TODO Check Frequency is always a number
+		new Label(composite, SWT.NONE).setText("Processor Frequency (Hz):");
 		ProcessorFrequency = new Text(composite, SWT.BORDER);
 		gd = new GridData();
 		gd.horizontalAlignment = SWT.FILL;
 		gd.grabExcessHorizontalSpace = true;
 		ProcessorFrequency.setLayoutData(gd);
 		ProcessorFrequency.addListener(SWT.Modify, fieldModifyListener);
-		
-		
+		ProcessorFrequency.setEnabled(false);
+
 		// **********************************************************************************
-		// *********************************Upload Protocall*********************************
+		// *********************************Upload
+		// Protocall*********************************
 		// **********************************************************************************
-		
+
 		new Label(composite, SWT.NONE).setText("Upload Protocall:");
 		UploadProtocall = new Combo(composite, SWT.BORDER | SWT.READ_ONLY);
 		gd = new GridData();
 		gd.horizontalAlignment = SWT.FILL;
 		UploadProtocall.setLayoutData(gd);
-		String Protocalls[] = {"","STK500v2"};//TODO set actual protocalls
-		// Boards = getBoardTypesFromXML();
+		String Protocalls[] = { "stk500", "STK500v2" };// TODO set actual
+														// protocalls
 		UploadProtocall.setItems(Protocalls);
-		UploadProtocall.setText(Protocalls[0]);//TODO set to whatever was used last time;
-		UploadProtocall.addListener(SWT.Modify,fieldModifyListener);
-		
+		UploadProtocall.setText(Protocalls[0]);// TODO set to whatever was used
+												// last time;
+		UploadProtocall.addListener(SWT.Selection, fieldModifyListener);
+		UploadProtocall.setEnabled(false);
 		// **********************************************************************************
-		// *********************************Uploader Baud************************************
+		// *********************************Uploader
+		// Baud************************************
 		// **********************************************************************************
 		new Label(composite, SWT.NONE).setText("Board:");
 		UploadBaud = new Combo(composite, SWT.BORDER | SWT.READ_ONLY);
 		gd = new GridData();
 		gd.horizontalAlignment = SWT.FILL;
 		UploadBaud.setLayoutData(gd);
-		String Bauds[] = { "152000","1654322" };//TODO Set actual bauds
+		String Bauds[] = { "152000", "1654322" };// TODO Set actual usable bauds
 		UploadBaud.setItems(Bauds);
-		UploadBaud.setText(Bauds[0]);//TODO set to whatever was used last time;
-		UploadBaud.addListener(SWT.Modify,fieldModifyListener);		
-		
+		UploadBaud.setText(Bauds[0]);// TODO set to whatever was used last time;
+		UploadBaud.addListener(SWT.Selection, fieldModifyListener);
+		UploadBaud.setEnabled(false);
+
+		// sets which fields can be edited
 		setEditableFields();
 		setPageComplete(validatePage());
-		setWarnings();
 		setControl(composite);
 		Dialog.applyDialogFont(composite);
 	}
 
-	private void setWarnings() 
-	{
-		setErrorMessage(null);
-		setMessage(null);
-	}
-
-	private void setEditableFields() 
-	{
-		boolean editable = getBoardType().equals("Custom");
-		ProcessorCombo.setEnabled(editable);
-		ProcessorFrequency.setEnabled(editable);
-		UploadProtocall.setEnabled(editable);
-		UploadBaud.setEnabled(editable);
-	}
-
-	private boolean validatePage() 
-	{
-		boolean valid = true;
-		if (getArduinoPath().equals(""))
-		{
-			valid = false;
-		}
-		if(getBoardType().equals("Custom"))
-		{
-			//TODO check everything in custom settings is ok
-			valid = getProcessor()!="" && getFrequency()!=""
-					&& getUploadProtocall()!=""  && getUploadBaud()!="";
-		}
-		setWarnings();
-		return valid;
-	}
-	
-	private void createLine(Composite parent, int ncol) 
-	{
-		Label line = new Label(parent, SWT.SEPARATOR|SWT.HORIZONTAL|SWT.BOLD);
+	private void createLine(Composite parent, int ncol) {
+		Label line = new Label(parent, SWT.SEPARATOR | SWT.HORIZONTAL
+				| SWT.BOLD);
 		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
 		gridData.horizontalSpan = ncol;
 		line.setLayoutData(gridData);
-	}	
-	
+	}
 
 	public String getArduinoPath() {
 		if (ArduinoPathInput == null)
 			return "";
 		return ArduinoPathInput.getText().trim();
 	}
-	public String getBoardType()
-	{
+
+	public String getBoardType() {
 		if (BoardType == null)
 			return "";
 		return BoardType.getText().trim();
 	}
-	public String getOptimizeSetting(){
-		if (Optimize == null)
-			return "";
-		return Optimize.getText().trim();
-	}
-	public String getProcessor(){
-		if (ProcessorCombo == null)
-			return "";
-		return ProcessorCombo.getText().trim();
-	}
-	public String getFrequency(){
+
+	public String getFrequency() {
 		if (ProcessorFrequency == null)
 			return "";
 		return ProcessorFrequency.getText().trim();
 	}
-	public String getUploadProtocall()
-	{
+
+	public String getOptimizeSetting() {
+		if (Optimize == null)
+			return "";
+		return Optimize.getText().trim();
+	}
+
+	public String getProcessor() {
+		if (ProcessorCombo == null)
+			return "";
+		return ProcessorCombo.getText().trim();
+	}
+
+	public String getUploadBaud() {
+		if (UploadBaud == null)
+			return "";
+		return UploadBaud.getText().trim();
+	}
+
+	public String getUploadProtocall() {
 		if (UploadProtocall == null)
 			return "";
 		return UploadProtocall.getText().trim();
 	}
-	public String getUploadBaud(){
-		if (UploadBaud == null)
-			return "";
-		return UploadBaud.getText().trim();
+
+	/**
+	 * Sets which fields are editable by the user if arduino path isn't valid,
+	 * none are editable. else, if board is custom, board settings become
+	 * editablle as well
+	 */
+	private void setEditableFields() {
+		boolean e = arduinoPathIsValid();
+		BoardType.setEnabled(e);
+		Optimize.setEnabled(e);
+		if (e)
+			setOptionsForBoard();
+		boolean f = e && getBoardType().equals("Custom");
+		ProcessorCombo.setEnabled(f);
+		ProcessorFrequency.setEnabled(f);
+		UploadProtocall.setEnabled(f);
+		UploadBaud.setEnabled(f);
+	}
+
+	private void loadBoards() {
+		// PluginBase should always have a valid arduinopath if this is called
+		Target t = new Target(new File(ArduinoPath+File.separator+"hardware"+File.separator+"arduino"));
+		Map<String, Map<String, String>> m = t.getBoards();
+		for (String s : m.keySet()) {
+			if (s != null)
+				Boards.add(s);
+		}
+		Boards.add("Custom");
+		String[] sBoards = new String[Boards.size()];
+		Boards.toArray(sBoards);
+		BoardType.setItems(sBoards);
+	}
+
+	/**
+	 * Sets the uneditable items for a given board automatically
+	 */
+	private void setOptionsForBoard() 
+	{
+
+	}
+
+	private void setWarnings() {
+		if (!arduinoPathIsValid())
+			setErrorMessage("Arduino Path is not valid");
+		setMessage(null);
+	}
+
+	/**
+	 * Checks that the arduino path is valid, and if all custom fields are
+	 * filled in
+	 * <p>
+	 * Also sets page warnings and errors
+	 * 
+	 * @return true if the page is valid, and false otherwise
+	 */
+	private boolean validatePage() {
+		boolean valid = true;
+		if (!arduinoPathIsValid()) { // check arduino path is correct
+			valid = false;
+		}
+		if (getBoardType().equals("Custom")) {
+			// TODO check everything in custom settings is ok
+			valid = valid && getProcessor() != "" && getFrequency() != ""
+					&& getUploadProtocall() != "" && getUploadBaud() != "";
+		}
+		setWarnings();
+		return valid;
+	}
+
+	/**
+	 * @return true if arduino.exe is found in the arduino path textbox
+	 */
+	private boolean arduinoPathIsValid() {
+		File arduino = new File(ArduinoPathInput.getText(), "arduino.exe");
+		return arduino.exists();
 	}
 
 }
