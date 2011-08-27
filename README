@@ -28,7 +28,7 @@ Eventule Features include:
 	Arduino Project Editor				-Not Started (EASY ONCE OTHER STUFF IS FIGURED OUT)
 	Custom Nature						-Completed for features so far
 	Arduino Builder						-Completed
-	Editor for pde files				-Not Started
+	Editor for pde files				-Started
 	Saved preferences					-Not Started
 
 So Far I am able to create a new project, 
@@ -100,7 +100,11 @@ Saved Preferences
 Editor for pde files:
 	What:	-with the plugin, pde files should be opened as if they were c files with highlighting 
                 and auto completion enabled.
-	So Far:	-Not Started (probably somewhat easy to implement but i dont know how)
+                
+	So Far:	-PDE files open as if they were regular c files
+				-update, stopped working
+			-no auto completion or error markers.
+			-pde file icons say .c instead of .pde
 
 
 
