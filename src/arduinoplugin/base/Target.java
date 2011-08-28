@@ -27,6 +27,7 @@ package arduinoplugin.base;
 
 import java.io.*;
 import java.util.*;
+import java.util.Map.Entry;
 
 
 public class Target {
@@ -92,6 +93,17 @@ public class Target {
 	 */
 	public Map<String, Map<String, String>> getBoards() {
 		return boards;
+	}
+	
+	/**
+	 * @param board the name of the board to get settings for
+	 * @return the settings to which the specified board is mapped, 
+	 * 			or null if this map contains no mapping for the board
+	  *			Map&ltKEY,VALUE&gt
+	 */
+	public Map<String,String> getBoardSettings(String board)
+	{
+		return boards.get(board);		
 	}
 
 	
@@ -174,5 +186,24 @@ public class Target {
 		    }
 		    return null;
 		  }
+
+	/**
+	 * Returns the Maped name of the board which has a name value of the given string
+	 * @param boardName	the name of the board, to get the base name of 
+	 * @return the base name of the board that has the name equal to boardName
+	 */
+	public String getBoardNamed(String boardName) 
+	{
+		for(Entry<String,Map<String,String>> entry : boards.entrySet())
+		{
+			for(Entry<String,String> e2: entry.getValue().entrySet())
+			{
+				if(e2.getValue().equals(boardName))
+					return entry.getKey();
+			}
+					
+		}
+		return null;
+	}
 	
 }
