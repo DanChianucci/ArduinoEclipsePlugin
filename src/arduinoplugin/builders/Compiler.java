@@ -26,8 +26,11 @@ package arduinoplugin.builders;
 import java.io.*;
 import java.util.*;
 
+import org.eclipse.core.resources.IProject;
+
 import arduinoplugin.Preprocess.Sketch;
 import arduinoplugin.base.PluginBase;
+import arduinoplugin.base.SettingsManager;
 
 public class Compiler implements MessageConsumer {
 
@@ -37,8 +40,13 @@ public class Compiler implements MessageConsumer {
 	RunnerException exception;
 	private static String MCU = null;
 	private static String F_CPU = null;
+	IProject project;
+	static IProject statProject;
 
-	public Compiler() {
+	public Compiler(IProject p) 
+	{
+		project=p;
+		statProject = p;
 	}
 
 	/**
@@ -62,8 +70,8 @@ public class Compiler implements MessageConsumer {
 		this.verbose = verbose;
 
 		String avrBasePath = PluginBase.getAVRPath();
-		MCU = PluginBase.getMCU();
-		F_CPU = PluginBase.getFrequency();
+		MCU = SettingsManager.getSetting("MCU",project);
+		F_CPU = SettingsManager.getSetting("Frequency",project);
 		if (!boardSettingsFull()) {
 			RunnerException re = new RunnerException(
 					"No board selected; please choose a board from the Tools > Board menu.");
@@ -145,7 +153,7 @@ public class Compiler implements MessageConsumer {
 		// 4. link it all together into the .elf file
 		System.out.println("link into elf");
 		List<String> baseCommandLinker = new ArrayList<String>(
-				Arrays.asList(new String[] { avrBasePath + "avr-gcc", "-O"+PluginBase.getOptimize(),
+				Arrays.asList(new String[] { avrBasePath + "avr-gcc", "-O"+SettingsManager.getSetting("Optimize",project),
 						"-Wl,--gc-sections", "-mmcu=" + MCU, "-o",
 						buildPath + File.separator + primaryClassName + ".elf" }));
 
@@ -395,7 +403,7 @@ public class Compiler implements MessageConsumer {
 						// link
 						"-g", // include debugging info (so errors include line
 						// numbers)
-						"-O" + PluginBase.getOptimize(), // optimize for size
+						"-O" + SettingsManager.getSetting("Optimize",statProject), // optimize for size
 						"-w", // surpress all warnings
 						"-ffunction-sections", // place each function in its own
 						// section
@@ -420,7 +428,7 @@ public class Compiler implements MessageConsumer {
 						// link
 						"-g", // include debugging info (so errors include line
 						// numbers)
-						"-O" + PluginBase.getOptimize(), // optimize for size
+						"-O" + SettingsManager.getSetting("Optimize",statProject), // optimize for size
 						"-w", // surpress all warnings
 						"-fno-exceptions", "-ffunction-sections", // place each
 						// function
