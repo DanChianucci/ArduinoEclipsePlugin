@@ -4,13 +4,13 @@ import java.io.File;
 import org.eclipse.core.resources.ResourcesPlugin;
 
 public class PluginBase {
-	private static String MCU = "";
+/*	private static String MCU = "";
 	private static String FREQ = "";
 	private static String PATH = "";
 	private static String BOARD_TYPE = "";
 	private static String OPT = "";
 	private static String UPLOAD_PROT = "";
-	private static String UPLOAD_BAUD = "";
+	private static String UPLOAD_BAUD = "";*/
 
 	/**
 	 * modified from findFileInFolder from arduino Compiler.java
@@ -62,9 +62,9 @@ public class PluginBase {
 		return getArduinoPath() + "libraries";
 	}
 
-	// TODO read from settings file
+	// TODO give actual project setting
 	public static String getArduinoPath() {
-		return PATH + File.separator;
+		return SettingsManager.getSetting("ArduinoPath",null)+File.separator;//PATH + File.separator;
 	}
 
 	public static String getAVRLibCPath() {
@@ -82,18 +82,18 @@ public class PluginBase {
 		return new String[] { "ArduinoUNO", "Custom" };
 	}
 
-	public static String getBoardType() {
+	/*public static String getBoardType() {
 		return BOARD_TYPE;
-	}
+	}*/
 
 	public static String getCorePath() {
 		return getHardwarePath() + "arduino" + File.separator + "cores"
 				+ File.separator + "arduino" + File.separator;
 	}
 
-	public static String getFrequency() {
+	/*public static String getFrequency() {
 		return FREQ;
-	}
+	}*/
 
 	public static String getHardwarePath() {
 		return getArduinoPath() + "hardware" + File.separator;
@@ -133,26 +133,33 @@ public class PluginBase {
 
 	}
 
-	public static String getMCU() {
+	/*public static String getMCU() {
 		return MCU;
-	}
+	}*/
 
-	public static String getOptimize() {
+	/*public static String getOptimize() {
 		return OPT;
-	}
+	}*/
 
 	public static String[] getProcessorArray() {
-		return new String[] { "atmega328p", "atmega168", "atmega2560",
-				"atmega1280", "atmega8" };
+		return new String[] { "atmega128", "atmega1280", "atmega1281",
+				"atmega1284p", "atmega16", "atmega163", "atmega164p",
+				"atmega165", "atmega165p", "atmega168", "atmega169",
+				"atmega169p", "atmega2560", "atmega2561", "atmega32",
+				"atmega324p", "atmega325", "atmega3250", "atmega328",
+				"atmega328p", "atmega329", "atmega3290", "atmega48",
+				"atmega64", "atmega640", "atmega644", "atmega644p",
+				"atmega645", "atmega6450", "atmega649", "atmega6490",
+				"atmega8", "atmega8515", "atmega8535", "atmega88" };
 	}
 
-	public static String getUploadBaud() {
+	/*public static String getUploadBaud() {
 		return UPLOAD_BAUD;
-	}
+	}*/
 
-	public static String getUploadProtocall() {
+	/*public static String getUploadProtocall() {
 		return UPLOAD_PROT;
-	}
+	}*/
 
 	private static String getWorkspaceLibPath() {
 		File file = new File(ResourcesPlugin.getWorkspace().getRoot()
@@ -199,7 +206,7 @@ public class PluginBase {
 		}
 	}
 
-	// TODO need to write to a file instead of local variable
+	/*// TODO need to write to a file instead of local variable
 	public static void setArduinoPath(String nPATH) {
 		PATH = nPATH;
 	}
@@ -226,7 +233,7 @@ public class PluginBase {
 
 	public static void setUploadProtocall(String nUP) {
 		UPLOAD_PROT = nUP;
-	}
+	}*/
 
 	public PluginBase() {
 	}
