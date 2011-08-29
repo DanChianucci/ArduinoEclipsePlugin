@@ -34,6 +34,7 @@
          name="ArduinoBuilder"
          point="org.eclipse.core.resources.builders">
       <builder
+            callOnEmptyDelta="true"
             hasNature="true">
          <run
                class="arduinoplugin.builders.ArduinoProjectBuilder">
@@ -44,11 +45,27 @@
          point="org.eclipse.ui.editors">
       <editor
             class="arduinoplugin.editors.PDEEditor"
-            default="true"
+            contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
             extensions="pde"
-            id="ArduinoPlugin.PDEEditor"
+            icon="icons/arduino.gif"
+            id="arduinoplugin.editors.PDEEditor"
             name="PDE Editor">
       </editor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            class="arduinoplugin.properties.SamplePropertyPage"
+            icon="icons/arduino.gif"
+            id="arduinoplugin.properties.samplePropertyPage"
+            name="Arduino Properties"
+            nameFilter="*.*">
+         <enabledWhen>
+            <instanceof
+                  value="org.eclipse.core.resources.IFile">
+            </instanceof>
+         </enabledWhen>
+      </page>
    </extension>
 
 </plugin>
