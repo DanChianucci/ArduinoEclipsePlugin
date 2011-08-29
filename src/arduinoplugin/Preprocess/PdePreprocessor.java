@@ -96,7 +96,6 @@ public class PdePreprocessor {
     Sketch.scrubComments(program);
     // If there are errors, an exception is thrown and this fxn exits.
 
-    //TODO in arduino this is defaulted to be true
     if (true){//Preferences.getBoolean("preproc.substitute_unicode")) {
       program = substituteUnicode(program);
     }

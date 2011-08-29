@@ -43,7 +43,7 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            class="arduinoplugin.editors.PdeEditor"
+            class="arduinoplugin.editors.PDEEditor"
             default="true"
             extensions="pde"
             id="ArduinoPlugin.PDEEditor"

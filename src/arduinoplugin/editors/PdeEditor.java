@@ -7,9 +7,9 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
-public class PdeEditor extends EditorPart {
+public class PDEEditor extends EditorPart {
 
-	public PdeEditor() {
+	public PDEEditor() {
 		// TODO Auto-generated constructor stub
 	}
 
