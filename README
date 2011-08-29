@@ -10,30 +10,27 @@ I'm not sure how to make a plugin that can be installed in another version of ec
 the only way to run this, is to import it into eclipse as a project, and press run.  This should open
 another window of eclipse up, which will have this plugin installed.
 
-Press new Project, and select arduino project.  The first page of the wiizard is self explanatory.
-The second page of the wizard must be completed.
-    -The location of the arduino install must be specified
+Press new Project, and select arduino project.  The first page of the wizard is self explanatory.
+The second page of the wizard must be filled in.
+    -The location of the arduino install must be specified 
+        -Notice that the incorrect path warning will not disapear, but the finish button will work)
     -the board type (currently only uno, and custom supported)
         - if custom is selected, the processor type and frequency must be filled in.
         -Although the uploading stuff is unused as of yet, you must fill those in as well
             (just pick whatever).
     -write your source code in the text editor, save, and press build project.
-    -If you exit eclipse, and go back, it wont build because it has lost all of its settings.
 
 
 
 Eventule Features include:
-	New Arduino Project Wizard			-Started
+	New Arduino Project Wizard			-Completed (plan to make more user friendly)
 	Import Arduino Project Wizard		-Not Started (EASY ONCE NEW PROJECT IS DONE)
-	Arduino Project Editor				-Not Started (EASY ONCE OTHER STUFF IS FIGURED OUT)
+	Settings Editor     				-Not Started (EASY ONCE OTHER STUFF IS FIGURED OUT)
 	Custom Nature						-Completed for features so far
 	Arduino Builder						-Completed
 	Editor for pde files				-Started
-	Saved preferences					-Not Started
+	Saved preferences					-Completed
 
-So Far I am able to create a new project, 
-completly coompile projects that only have one file, and that don't use includes
-compile settings are lost on exit (no save settings yet
 	
 New Arduino Project Wizard:
 	Page 1:	 -The user will be able to enter a name for the project and the workspace 
@@ -65,15 +62,14 @@ Arduino Import Wizard:
 	So Far: - Not started, but it will be the same settings page as shown in the New Projects Wizard
 			
 			 
-Arduino Project Editor:
+Arduino Settings Editor:
 	Page 1:	 -User will be able to change the board/mcu settings, or change the arduino environment
 	
 	After:	 Project Wide Settings will be saved
 	
 	So Far: -Not Started
 			-Really will just need to make another instance of the settings page which is already 
-                being written 
-				for the new project wizard
+                being written for the new project wizard
 	
 Custom Nature:
 	What:	-The Arduino project nature will link the project with other arduino plugin tools
@@ -88,14 +84,13 @@ Arduino Builder:
 			-Ability to just remake the project, or also remake the entire core library
 				(arduino remakes the core library every time).
 	
-	So Far:	Completed bug testing phase
+	So Far:	-Completed bug testing phase
 		
 	
 Saved Preferences
 	What:	-The plugin should be able to remember previous user settings and whatnot.
 	After:	-Will save workspace wide and project wide settings to a file
-	So Far:	-Still keeps settings in ram, so all settings are lost on exit
-			-All settings are workspace wide
+	So Far:	-completed
 		
 Editor for pde files:
 	What:	-with the plugin, pde files should be opened as if they were c files with highlighting 
