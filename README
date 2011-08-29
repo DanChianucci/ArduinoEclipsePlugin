@@ -23,10 +23,11 @@ The second page of the wizard must be filled in.
 
 
 Eventule Features include:
-	New Arduino Project Wizard			-Completed (plan to make more user friendly)
-	Import Arduino Project Wizard		-Not Started (EASY ONCE NEW PROJECT IS DONE)
+
+	New Arduino Project Wizard			-Completed
+	Import Arduino Project Wizard		-Not Started
 	Settings Editor     				-Not Started (EASY ONCE OTHER STUFF IS FIGURED OUT)
-	Custom Nature						-Completed for features so far
+	Custom Nature						-Completed
 	Arduino Builder						-Completed
 	Editor for pde files				-Started
 	Saved preferences					-Completed
@@ -45,11 +46,9 @@ New Arduino Project Wizard:
 			 -Save WorkspaceWide Settings and Project Wide settings
 			 
 	So Far:	-New projects can be created
-			-Doesn't check if arduino directory is actually correct
-			-Doesn't read board.txt, so only custom boards and hardcoded arduino uno are allowed
-			-Only allows a small subset of processors... easy to fix just need a list of avr-gcc 
-                supported processors
-			-Doesn't save settings when completedd (stay in RAM)
+			-Checks if arduino directory is actually correct
+			-Read board.txt
+			-Saves settings when completed
 			
 Arduino Import Wizard:
 	What:	-Allows the user to import a project started in the arduino environment, or downloaded 
@@ -96,10 +95,8 @@ Editor for pde files:
 	What:	-with the plugin, pde files should be opened as if they were c files with highlighting 
                 and auto completion enabled.
                 
-	So Far:	-PDE files open as if they were regular c files
-				-update, stopped working
-			-no auto completion or error markers.
-			-pde file icons say .c instead of .pde
+	So Far:	-PDE files open in a txt editor	
+			-no auto completion, highlighting or error markers.
 
 
 
