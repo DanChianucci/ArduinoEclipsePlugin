@@ -6,7 +6,9 @@ Bundle-Activator: arduinoplugin.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources;bundle-version="3.7.100",
- org.eclipse.cdt.core
+ org.eclipse.cdt.core,
+ org.eclipse.jface.text,
+ org.eclipse.ui.editors
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Version: 0.0.1.v887645834
