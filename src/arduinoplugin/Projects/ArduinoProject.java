@@ -12,7 +12,7 @@ import org.eclipse.core.runtime.CoreException;
 import arduinoplugin.natures.ArduinoProjectNature;
 import org.eclipse.core.runtime.IProgressMonitor;
 
-
+//TODO EXTEND PROJECT
 public class ArduinoProject {
     /**
      * - create the default project
@@ -34,10 +34,7 @@ public class ArduinoProject {
         {
         	//Adds the Project nature
         	addNature(project,ArduinoProjectNature.NATURE_ID);
-        	//creates the folders
-        	//String[] paths = {"src"};//This needs to be name of the pde file/Project
-        	//addToProjectStructure(project, paths);
-        	
+       	
         	//TODO add files to the arduinoproject
         	String[] filePaths = {"c:/users/Dan/main.java"};//the files path on disk
         	String[] projectPaths = {projectName+".pde"};//the files path in the project
