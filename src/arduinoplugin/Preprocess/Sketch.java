@@ -27,6 +27,9 @@ import java.io.*;
 import java.lang.reflect.Array;
 import java.util.*;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
+
 import arduinoplugin.base.PluginBase;
 import arduinoplugin.builders.RunnerException;
 import arduinoplugin.builders.Compiler;
@@ -64,6 +67,8 @@ public class Sketch {
 	 */
 	private int codeCount;
 	private File[] code;
+	
+	private IProject project;
 
 
 	/**
@@ -77,6 +82,8 @@ public class Sketch {
 
 		primaryFile = new File(path);
 		
+		//TODO IDK IF THIS WILL WORK
+		project = ResourcesPlugin.getWorkspace().getRoot().getProject(primaryFile.getParentFile().getName()); 
 		// get the name of the sketch by chopping .pde or .java
 		// off of the main file name
 		String mainFilename = primaryFile.getName();
@@ -286,7 +293,7 @@ public class Sketch {
 			throw pe;
 
 		} catch (Exception ex) {
-			// TODO better method for handling this?
+			// XXX better method for handling this?
 			System.err.println("Uncaught exception type:" + ex.getClass());
 			ex.printStackTrace();
 			throw new RunnerException(ex.toString());
@@ -460,7 +467,7 @@ public class Sketch {
 
 		// compile the program. errors will happen as a RunnerException
 		// that will bubble up to whomever called build().
-		Compiler compiler = new Compiler();
+		Compiler compiler = new Compiler(project);
 		System.out.println("calling compiler");
 		if (compiler.compile(this, buildPath, primaryClassName, verbose)) {
 			size(buildPath, primaryClassName);
@@ -474,7 +481,7 @@ public class Sketch {
 			throws RunnerException {
 		long size = 0;
 		// TODO get the max size for the different boards
-		String maxsizeString = "1"; // Base.getBoardPreferences().get("upload.maximum_size");
+		String maxsizeString = "1";//TODO set actual size//PluginBase.getBoardPreferences().get("upload.maximum_size");
 		if (maxsizeString == null)
 			return;
 		long maxsize = Integer.parseInt(maxsizeString);
