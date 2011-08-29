@@ -109,9 +109,8 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 		// **********************************************************************************
 		// **************************  Arduino Environment  *********************************
 		// **********************************************************************************
-		new Label(composite, SWT.NONE).setText("Arduino Location");// TODO Find
-																	// ArdEnv
-																	// automatically
+		new Label(composite, SWT.NONE).setText("Arduino Location");
+		// TODO Find ArdEnv automatically
 		ArduinoPathInput = new Text(composite, SWT.BORDER);
 		gd = new GridData();
 		gd.horizontalAlignment = SWT.FILL;
@@ -206,8 +205,8 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 		gd = new GridData();
 		gd.horizontalAlignment = SWT.FILL;
 		UploadProtocall.setLayoutData(gd);
-		String Protocalls[] = { "stk500", "STK500v2" };// TODO set actual
-														// protocalls
+		String Protocalls[] = { "stk500", "stk500v2" };
+		// TODO set actual protocalls
 		UploadProtocall.setItems(Protocalls);
 		UploadProtocall.setText(Protocalls[0]);// TODO set to whatever was used
 												// last time;
@@ -221,7 +220,7 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 		gd = new GridData();
 		gd.horizontalAlignment = SWT.FILL;
 		UploadBaud.setLayoutData(gd);
-		String Bauds[] = { "152000", "1654322" };// TODO Set actual usable bauds
+		String Bauds[] = {"57600","19200","115200"};// TODO Set actual usable bauds
 		UploadBaud.setItems(Bauds);
 		UploadBaud.setText(Bauds[0]);// TODO set to whatever was used last time;
 		UploadBaud.addListener(SWT.Selection, fieldModifyListener);
@@ -369,7 +368,6 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 			valid = false;
 		}
 		if (getBoardType().equals("Custom")) {
-			// TODO check everything in custom settings is ok
 			valid = valid && getProcessor() != "" && getFrequency() != ""
 					&& getUploadProtocall() != "" && getUploadBaud() != "";
 		}
