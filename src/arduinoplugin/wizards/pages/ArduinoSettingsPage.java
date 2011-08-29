@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import arduinoplugin.base.PluginBase;
+import arduinoplugin.base.SettingsManager;
 import arduinoplugin.base.Target;
 
 /**
@@ -112,6 +113,9 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 		new Label(composite, SWT.NONE).setText("Arduino Location");
 		// TODO Find ArdEnv automatically
 		ArduinoPathInput = new Text(composite, SWT.BORDER);
+		String a =SettingsManager.getSetting("ArduinoPath", null);
+		if(a!=null)
+			ArduinoPathInput.setText(a);
 		gd = new GridData();
 		gd.horizontalAlignment = SWT.FILL;
 		gd.horizontalSpan = (ncol - 2);
@@ -143,9 +147,6 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 		gd = new GridData();
 		gd.horizontalAlignment = SWT.FILL;
 		BoardType.setLayoutData(gd);
-		// BoardType.setItems(Boards);//whatever was used last time
-		// BoardType.setText(Boards[0]);//TODO set to whatever was used last
-		// time;
 		BoardType.addListener(SWT.Selection, BoardModifyListener);
 		BoardType.setEnabled(false);
 
@@ -159,7 +160,6 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 		Optimize.setLayoutData(gd);
 		String OptimizeOptions[] = { "0", "1", "2", "3", "s" };
 		Optimize.setItems(OptimizeOptions);
-		Optimize.setText("s");// TODO set to whatever is settings
 		Optimize.setEnabled(false);
 
 		createLine(composite, ncol);
@@ -177,7 +177,6 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 		ProcessorCombo.setLayoutData(gd);
 		Processors = PluginBase.getProcessorArray();
 		ProcessorCombo.setItems(Processors);//TODO Make better list
-		//ProcessorCombo.setText(Processors[0]);
 		ProcessorCombo.addListener(SWT.Selection, fieldModifyListener);
 		ProcessorCombo.setEnabled(false);
 
@@ -208,8 +207,6 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 		String Protocalls[] = { "stk500", "stk500v2" };
 		// TODO set actual protocalls
 		UploadProtocall.setItems(Protocalls);
-		UploadProtocall.setText(Protocalls[0]);// TODO set to whatever was used
-												// last time;
 		UploadProtocall.addListener(SWT.Selection, fieldModifyListener);
 		UploadProtocall.setEnabled(false);
 		// **********************************************************************************
@@ -222,11 +219,40 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 		UploadBaud.setLayoutData(gd);
 		String Bauds[] = {"57600","19200","115200"};// TODO Set actual usable bauds
 		UploadBaud.setItems(Bauds);
-		UploadBaud.setText(Bauds[0]);// TODO set to whatever was used last time;
+
 		UploadBaud.addListener(SWT.Selection, fieldModifyListener);
 		UploadBaud.setEnabled(false);
 
 		// sets which fields can be edited
+		if(a!=null)//if arduino path setting was found
+		{
+			//check that a is the correct arduino path
+			pathModifyListener.handleEvent(new Event());
+			if(arduinoPathIsValid())
+			{//if it is the correct path
+				String lastBoard = SettingsManager.getSetting("BoardType",null);
+				if(lastBoard!=null)
+					BoardType.setText(lastBoard);
+				if(lastBoard!=null && lastBoard.equals("Custom"))
+				{
+					String lastProc = SettingsManager.getSetting("MCU",null);
+					ProcessorCombo.setText(lastProc);
+					String lastFreq = SettingsManager.getSetting("Frequency",null);
+					if(lastFreq!=null)
+							ProcessorFrequency.setText(lastFreq);
+					String lastProt = SettingsManager.getSetting("UploadProtocall", null);
+					if(lastProt!=null)
+						UploadProtocall.setText(lastProt);
+					String lastBaud = SettingsManager.getSetting("UploadBaud", null);
+					if(lastBaud!=null)
+						UploadBaud.setText(lastBaud);// TODO set to whatever was used last time;
+				}
+				String opt = SettingsManager.getSetting("Optimize", null);
+				if(opt!=null)
+					Optimize.setText(opt);// TODO set to whatever is settings
+				
+			}
+		}
 		setEditableFields();
 		setPageComplete(validatePage());
 		setControl(composite);
