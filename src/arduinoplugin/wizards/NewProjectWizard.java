@@ -5,6 +5,8 @@ package arduinoplugin.wizards;
 
 import java.net.URI;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
@@ -16,7 +18,8 @@ import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 
 import arduinoplugin.Projects.ArduinoProject;
-import arduinoplugin.base.PluginBase;
+//import arduinoplugin.base.PluginBase;
+import arduinoplugin.base.SettingsManager;
 import arduinoplugin.wizards.pages.ArduinoSettingsPage;
 
 
@@ -79,13 +82,16 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
 	    } // else location == null
 	    ArduinoProject.createProject(name, location);
 	    
-	    PluginBase.setArduinoPath(_pageTwo.getArduinoPath());
-	    PluginBase.setBoardType(_pageTwo.getBoardType());
-	    PluginBase.setOptimize(_pageTwo.getOptimizeSetting());
-	    PluginBase.setFreq(_pageTwo.getFrequency());
-	    PluginBase.setMCU(_pageTwo.getProcessor());
-	    PluginBase.setUploadProtocall(_pageTwo.getUploadProtocall());
-	    PluginBase.setUploadBaud(_pageTwo.getUploadBaud());
+	    IProject p = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
+	    
+	    //TODO fix the static/non static issue;
+	    SettingsManager.saveBothSetting("ArduinoPath",_pageTwo.getArduinoPath(),p);
+	    SettingsManager.saveBothSetting("BoardType",_pageTwo.getBoardType(),p);
+	    SettingsManager.saveBothSetting("Optimize",_pageTwo.getOptimizeSetting(),p);
+	    SettingsManager.saveBothSetting("Frequency",_pageTwo.getFrequency(),p);
+	    SettingsManager.saveBothSetting("MCU",_pageTwo.getProcessor(),p);
+	    SettingsManager.saveBothSetting("UploadProtocall",_pageTwo.getUploadProtocall(),p);
+	    SettingsManager.saveBothSetting("UploadBaud",_pageTwo.getUploadBaud(),p);
 	    
 	    BasicNewProjectResourceWizard.updatePerspective(_configurationElement);
 	    
