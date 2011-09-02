@@ -6,6 +6,8 @@ Parts of this Plugin (Especially the builders and Preprocesors) are slightly mod
 what is found in the Arduino Sorce code.  As Such, these files follow the GNU General Public Liscence 
 available in Liscence.txt
 
+
+Note: the next part isn't true, I still cant figure out how to make an installable plugin.
 To install the plugin download the latest.jar file located in the plugins directory, and place it 
 in the dropins folder of any eclipse install (indigo or later
 
