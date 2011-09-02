@@ -2,7 +2,6 @@ package arduinoplugin.Projects;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.net.URI;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -12,7 +11,6 @@ import org.eclipse.core.runtime.CoreException;
 import arduinoplugin.natures.ArduinoProjectNature;
 import org.eclipse.core.runtime.IProgressMonitor;
 
-//TODO EXTEND PROJECT
 public class ArduinoProject {
     /**
      * - create the default project
@@ -149,10 +147,10 @@ public class ArduinoProject {
             project.setDescription(description, monitor);
         }
     }
-    
 
-    
 
+
+	
 }
 
 
