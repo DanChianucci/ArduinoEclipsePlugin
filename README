@@ -6,9 +6,8 @@ Parts of this Plugin (Especially the builders and Preprocesors) are slightly mod
 what is found in the Arduino Sorce code.  As Such, these files follow the GNU General Public Liscence 
 available in Liscence.txt
 
-I'm not sure how to make a plugin that can be installed in another version of eclipse, so as of now
-the only way to run this, is to import it into eclipse as a project, and press run.  This should open
-another window of eclipse up, which will have this plugin installed.
+To install the plugin download the latest.jar file located in the plugins directory, and place it 
+in the dropins folder of any eclipse install (indigo or later
 
 Press new Project, and select arduino project.  The first page of the wizard is self explanatory.
 The second page of the wizard must be filled in.
