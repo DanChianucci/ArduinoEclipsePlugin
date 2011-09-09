@@ -97,7 +97,10 @@ Editor for pde files:
                 and auto completion enabled.
                 
 	So Far:	-PDE files open in a txt editor	
-			-no auto completion, highlighting or error markers.
+			-no auto completion
+            -no error markers
+            -some things do get highlighted (for now only strings, chars, 
+                and multiline comments... more to come)
 
 
 
