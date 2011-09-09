@@ -16,6 +16,11 @@ public class Configuration extends SourceViewerConfiguration {
 	private Scanner scanner;
 	private ColorManager colorManager;
 
+	/**
+	 *tells viewer what  content types their are
+	 *sets double click strategy
+	 *reconciles the presentation
+	 */
 	public Configuration(ColorManager colorManager) {
 		this.colorManager = colorManager;
 	}
@@ -50,6 +55,9 @@ public class Configuration extends SourceViewerConfiguration {
 		return tagScanner;
 	}
 
+	/**
+	 * Sets which scanners scan where
+	 */
 	public IPresentationReconciler getPresentationReconciler(
 			ISourceViewer sourceViewer) {
 		PresentationReconciler reconciler = new PresentationReconciler();
@@ -63,8 +71,7 @@ public class Configuration extends SourceViewerConfiguration {
 		reconciler.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
 
 		NonRuleBasedDamagerRepairer ndr = new NonRuleBasedDamagerRepairer(
-				new TextAttribute(
-						colorManager.getColor(IColorConstants.COMMENT)));
+				new TextAttribute(colorManager.getColor(IColorConstants.COMMENT)));
 		reconciler.setDamager(ndr, PartitionScanner.COMMENT);
 		reconciler.setRepairer(ndr, PartitionScanner.COMMENT);
 

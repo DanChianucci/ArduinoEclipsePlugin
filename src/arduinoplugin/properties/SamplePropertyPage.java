@@ -379,6 +379,7 @@ public class SamplePropertyPage extends PropertyPage{
 	 * 
 	 * @return true if the page is valid, and false otherwise
 	 */
+	@SuppressWarnings("unused")
 	private boolean validatePage() {
 		boolean valid = true;
 		if (!arduinoPathIsValid()) { // check arduino path is correct

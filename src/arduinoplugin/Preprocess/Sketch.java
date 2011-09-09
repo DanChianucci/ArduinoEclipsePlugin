@@ -31,6 +31,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 
 import arduinoplugin.base.PluginBase;
+import arduinoplugin.base.SettingsManager;
 import arduinoplugin.builders.RunnerException;
 import arduinoplugin.builders.Compiler;
 import arduinoplugin.builders.Sizer;
@@ -81,9 +82,8 @@ public class Sketch {
 	public Sketch(String path, String BuildPath) throws IOException {
 
 		primaryFile = new File(path);
-		
-		//TODO IDK IF THIS WILL WORK
 		project = ResourcesPlugin.getWorkspace().getRoot().getProject(primaryFile.getParentFile().getName()); 
+		
 		// get the name of the sketch by chopping .pde or .java
 		// off of the main file name
 		String mainFilename = primaryFile.getName();
@@ -476,12 +476,12 @@ public class Sketch {
 		return null;
 	}
 
-	@SuppressWarnings("unused")
 	protected void size(String buildPath, String suggestedClassName)
 			throws RunnerException {
 		long size = 0;
 		// TODO get the max size for the different boards
-		String maxsizeString = "1";//TODO set actual size//PluginBase.getBoardPreferences().get("upload.maximum_size");
+		//have to first save the max size to the settings
+		String maxsizeString = SettingsManager.getSetting("upload.maximum_size", project);
 		if (maxsizeString == null)
 			return;
 		long maxsize = Integer.parseInt(maxsizeString);

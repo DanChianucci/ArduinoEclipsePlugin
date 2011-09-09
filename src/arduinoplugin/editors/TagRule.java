@@ -2,14 +2,13 @@ package arduinoplugin.editors;
 
 import org.eclipse.jface.text.rules.*;
 
-/**
- * sets rule for regular xml tag &lt &gt this is a multiline and so is a
- * partition??? this is needed beacause &lt? is different from &lt! is diff from
- * &lt
- * 
- * */
-public class TagRule extends MultiLineRule {
 
+public class TagRule extends MultiLineRule {
+	/**
+	 * sets rule for regular xml tag &lt &gt this is a multiline and so is a
+	 * partition??? this is needed beacause &lt? is different from &lt! is diff from
+	 * &lt 
+	 */
 	public TagRule(IToken token) {
 		super("<", ">", token);
 	}

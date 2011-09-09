@@ -62,7 +62,6 @@ public class PluginBase {
 		return getArduinoPath() + "libraries";
 	}
 
-	// TODO give actual project setting
 	public static String getArduinoPath() {
 		return SettingsManager.getSetting("ArduinoPath",null)+File.separator;//PATH + File.separator;
 	}
@@ -77,10 +76,7 @@ public class PluginBase {
 				+ File.separator + "bin" + File.separator;
 	}
 
-	public static String[] getBoardsArray() {
-		// TODO read from boards.txt
-		return new String[] { "ArduinoUNO", "Custom" };
-	}
+
 
 	/*public static String getBoardType() {
 		return BOARD_TYPE;
@@ -205,35 +201,6 @@ public class PluginBase {
 			}
 		}
 	}
-
-	/*// TODO need to write to a file instead of local variable
-	public static void setArduinoPath(String nPATH) {
-		PATH = nPATH;
-	}
-
-	public static void setBoardType(String nBT) {
-		BOARD_TYPE = nBT;
-	}
-
-	public static void setFreq(String nFREQ) {
-		FREQ = nFREQ;
-	}
-
-	public static void setMCU(String nMCU) {
-		MCU = nMCU;
-	}
-
-	public static void setOptimize(String nOPT) {
-		OPT = nOPT;
-	}
-
-	public static void setUploadBaud(String nUB) {
-		UPLOAD_BAUD = nUB;
-	}
-
-	public static void setUploadProtocall(String nUP) {
-		UPLOAD_PROT = nUP;
-	}*/
 
 	public PluginBase() {
 	}

@@ -84,7 +84,7 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
 	    
 	    IProject p = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
 	    
-	    //TODO fix the static/non static issue;
+	    
 	    SettingsManager.saveBothSetting("ArduinoPath",_pageTwo.getArduinoPath(),p);
 	    SettingsManager.saveBothSetting("BoardType",_pageTwo.getBoardType(),p);
 	    SettingsManager.saveBothSetting("Optimize",_pageTwo.getOptimizeSetting(),p);

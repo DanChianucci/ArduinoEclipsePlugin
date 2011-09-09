@@ -5,10 +5,10 @@ import org.eclipse.jface.text.rules.*;
 
 public class TagScanner extends RuleBasedScanner {
 /**
- * sets rules for strings and chars (probabley put rules for keywords in here*/
+ * scans the tag partitions and adds rules.
+ */
 	public TagScanner(ColorManager manager) {
-		IToken string = new Token(new TextAttribute(
-				manager.getColor(IColorConstants.STRING)));
+		IToken string = new Token(new TextAttribute(manager.getColor(IColorConstants.STRING)));
 
 		IRule[] rules = new IRule[3];
 
