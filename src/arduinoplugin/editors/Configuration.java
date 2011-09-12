@@ -12,7 +12,7 @@ import org.eclipse.jface.text.source.SourceViewerConfiguration;
 
 public class Configuration extends SourceViewerConfiguration {
 	private DoubleClickStrategy doubleClickStrategy;
-	private TagScanner tagScanner;
+	private PreProcScanner preProcScanner;
 	private Scanner scanner;
 	private ColorManager colorManager;
 
@@ -27,7 +27,7 @@ public class Configuration extends SourceViewerConfiguration {
 
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
 		return new String[] { IDocument.DEFAULT_CONTENT_TYPE,
-				PartitionScanner.COMMENT, PartitionScanner.TAG };
+				PartitionScanner.COMMENT, PartitionScanner.PREPROC };
 	}
 
 	public ITextDoubleClickStrategy getDoubleClickStrategy(
@@ -46,14 +46,6 @@ public class Configuration extends SourceViewerConfiguration {
 		return scanner;
 	}
 
-	protected TagScanner getTagScanner() {
-		if (tagScanner == null) {
-			tagScanner = new TagScanner(colorManager);
-			tagScanner.setDefaultReturnToken(new Token(new TextAttribute(
-					colorManager.getColor(IColorConstants.TAG))));
-		}
-		return tagScanner;
-	}
 
 	/**
 	 * Sets which scanners scan where
@@ -62,9 +54,9 @@ public class Configuration extends SourceViewerConfiguration {
 			ISourceViewer sourceViewer) {
 		PresentationReconciler reconciler = new PresentationReconciler();
 
-		DefaultDamagerRepairer dr = new DefaultDamagerRepairer(getTagScanner());
-		reconciler.setDamager(dr, PartitionScanner.TAG);
-		reconciler.setRepairer(dr, PartitionScanner.TAG);
+		DefaultDamagerRepairer dr = new DefaultDamagerRepairer(getPreProcScanner());
+		reconciler.setDamager(dr, PartitionScanner.PREPROC);
+		reconciler.setRepairer(dr, PartitionScanner.PREPROC);
 
 		dr = new DefaultDamagerRepairer(getScanner());
 		reconciler.setDamager(dr, IDocument.DEFAULT_CONTENT_TYPE);
@@ -76,6 +68,15 @@ public class Configuration extends SourceViewerConfiguration {
 		reconciler.setRepairer(ndr, PartitionScanner.COMMENT);
 
 		return reconciler;
+	}
+
+	protected PreProcScanner getPreProcScanner() {
+		if (preProcScanner == null) {
+			preProcScanner = new PreProcScanner(colorManager);
+			preProcScanner.setDefaultReturnToken(new Token(new TextAttribute(
+					colorManager.getColor(IColorConstants.TAG))));
+		}
+		return preProcScanner;
 	}
 
 }

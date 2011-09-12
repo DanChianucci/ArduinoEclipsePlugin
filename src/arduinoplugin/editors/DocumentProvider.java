@@ -16,7 +16,7 @@ public class DocumentProvider extends FileDocumentProvider {
 		IDocument document = super.createDocument(element);
 		if (document != null) {
 			IDocumentPartitioner partitioner =new FastPartitioner(new PartitionScanner(),
-					new String[] {PartitionScanner.TAG,PartitionScanner.COMMENT });
+					new String[] {PartitionScanner.PREPROC,PartitionScanner.COMMENT });
 			partitioner.connect(document);
 			document.setDocumentPartitioner(partitioner);
 		}
