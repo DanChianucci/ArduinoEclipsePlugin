@@ -9,8 +9,8 @@ public class PreProcScanner extends RuleBasedScanner {
  * scans the preprocessor partitions and adds rules.
  */
 	public PreProcScanner(ColorManager manager) {
-		IToken preProcessor = new Token(new TextAttribute(manager.getColor(IColorConstants.PROC_INSTR),null,SWT.BOLD));
-		IToken dir = new Token(new TextAttribute(manager.getColor(IColorConstants.ProcDir)));
+		IToken preProcessor = new Token(new TextAttribute(manager.getColor(IColorConstants.PREPROC_INSTRUCTION),null,SWT.BOLD));
+		IToken dir = new Token(new TextAttribute(manager.getColor(IColorConstants.PREPROC_DIR)));
 		
 		IRule[] rules = new IRule[4];
 

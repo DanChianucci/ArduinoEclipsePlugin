@@ -63,7 +63,7 @@ public class Configuration extends SourceViewerConfiguration {
 		reconciler.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
 
 		NonRuleBasedDamagerRepairer ndr = new NonRuleBasedDamagerRepairer(
-				new TextAttribute(colorManager.getColor(IColorConstants.COMMENT)));
+				new TextAttribute(colorManager.getColor(IColorConstants.MULTI_LINE_COMMENT)));
 		reconciler.setDamager(ndr, PartitionScanner.COMMENT);
 		reconciler.setRepairer(ndr, PartitionScanner.COMMENT);
 
@@ -74,7 +74,7 @@ public class Configuration extends SourceViewerConfiguration {
 		if (preProcScanner == null) {
 			preProcScanner = new PreProcScanner(colorManager);
 			preProcScanner.setDefaultReturnToken(new Token(new TextAttribute(
-					colorManager.getColor(IColorConstants.TAG))));
+					colorManager.getColor(IColorConstants.PREPROC_INSTRUCTION))));
 		}
 		return preProcScanner;
 	}
