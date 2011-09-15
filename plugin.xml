@@ -42,21 +42,6 @@
       </builder>
    </extension>
    <extension
-         point="org.eclipse.ui.propertyPages">
-      <page
-            class="arduinoplugin.properties.SamplePropertyPage"
-            icon="icons/arduino.gif"
-            id="arduinoplugin.properties.samplePropertyPage"
-            name="Arduino Properties"
-            nameFilter="*.*">
-         <enabledWhen>
-            <instanceof
-                  value="org.eclipse.core.resources.IFile">
-            </instanceof>
-         </enabledWhen>
-      </page>
-   </extension>
-   <extension
          point="org.eclipse.ui.editors">
       <editor
             class="arduinoplugin.editors.Editor"
@@ -66,6 +51,15 @@
             id="arduinoplugin.editors.PDEEditor"
             name="PDE Editor">
       </editor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            class="arduinoplugin.pages.ArduinoPropertyPage"
+            icon="icons/arduino.gif"
+            id="ArduinoPlugin.page1"
+            name="Properties Page">
+      </page>
    </extension>
 
 </plugin>
