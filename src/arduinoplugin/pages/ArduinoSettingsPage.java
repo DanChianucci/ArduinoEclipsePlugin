@@ -1,4 +1,4 @@
-package arduinoplugin.wizards.pages;
+package arduinoplugin.pages;
 
 import java.io.File;
 import java.util.HashSet;
@@ -28,14 +28,6 @@ import arduinoplugin.base.PluginBase;
 import arduinoplugin.base.SettingsManager;
 import arduinoplugin.base.Target;
 
-/**
- * @author Dan
- *
- */
-/**
- * @author Dan
- * 
- */
 public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 
 	final Shell shell = new Shell();
@@ -53,8 +45,7 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 	private String boardtxtPath;
 	private Set<String> Boards = new HashSet<String>();
 	private String[] Processors;
-	
-	
+
 	private Listener fieldModifyListener = new Listener() {
 		public void handleEvent(Event e) {
 			setPageComplete(validatePage());
@@ -65,7 +56,8 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 		public void handleEvent(Event e) {
 			if (arduinoPathIsValid()) {
 				ArduinoPath = ArduinoPathInput.getText();
-				boardtxtPath = ArduinoPath+File.separator+"hardware"+File.separator+"arduino";
+				boardtxtPath = ArduinoPath + File.separator + "hardware"
+						+ File.separator + "arduino";
 				loadBoards();
 			}
 			setEditableFields();
@@ -108,13 +100,14 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 
 		createLabel(composite, ncol, "Environment Settings");
 		// **********************************************************************************
-		// **************************  Arduino Environment  *********************************
+		// ************************** Arduino Environment
+		// *********************************
 		// **********************************************************************************
 		new Label(composite, SWT.NONE).setText("Arduino Location");
 		// TODO Find ArdEnv automatically
 		ArduinoPathInput = new Text(composite, SWT.BORDER);
-		String a =SettingsManager.getSetting("ArduinoPath", null);
-		if(a!=null)
+		String a = SettingsManager.getSetting("ArduinoPath", null);
+		if (a != null)
 			ArduinoPathInput.setText(a);
 		gd = new GridData();
 		gd.horizontalAlignment = SWT.FILL;
@@ -134,8 +127,7 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 				ArduinoPathInput.setText(Path);
 			}
 		});
-		
-		
+
 		createLine(composite, ncol);
 		createLabel(composite, ncol, "General Settings");
 
@@ -166,7 +158,8 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 		createLabel(composite, ncol, "Processor Settings");
 
 		// **********************************************************************************
-		// *****************************  Processor Type  ***********************************
+		// ***************************** Processor Type
+		// ***********************************
 		// **********************************************************************************
 
 		new Label(composite, SWT.NONE).setText("Processor:");
@@ -176,12 +169,13 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 		gd.grabExcessHorizontalSpace = true;
 		ProcessorCombo.setLayoutData(gd);
 		Processors = PluginBase.getProcessorArray();
-		ProcessorCombo.setItems(Processors);//TODO Make better list
+		ProcessorCombo.setItems(Processors);// TODO Make better list
 		ProcessorCombo.addListener(SWT.Selection, fieldModifyListener);
 		ProcessorCombo.setEnabled(false);
 
 		// **********************************************************************************
-		// *****************************  ProcessorFreq  ***********************************
+		// ***************************** ProcessorFreq
+		// ***********************************
 		// **********************************************************************************
 		new Label(composite, SWT.NONE).setText("Processor Frequency (Hz):");
 		ProcessorFrequency = new Text(composite, SWT.BORDER);
@@ -191,12 +185,13 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 		ProcessorFrequency.setLayoutData(gd);
 		ProcessorFrequency.addListener(SWT.Modify, fieldModifyListener);
 		ProcessorFrequency.setEnabled(false);
-		
-		createLine(composite,ncol);
-		createLabel(composite,ncol,"Upload Settings");
+
+		createLine(composite, ncol);
+		createLabel(composite, ncol, "Upload Settings");
 
 		// **********************************************************************************
-		// *****************************  Upload Protocall  *********************************
+		// ***************************** Upload Protocall
+		// *********************************
 		// **********************************************************************************
 
 		new Label(composite, SWT.NONE).setText("Upload Protocall:");
@@ -210,47 +205,52 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 		UploadProtocall.addListener(SWT.Selection, fieldModifyListener);
 		UploadProtocall.setEnabled(false);
 		// **********************************************************************************
-		// ******************************  Uploader Baud  ***********************************
+		// ****************************** Uploader Baud
+		// ***********************************
 		// **********************************************************************************
 		new Label(composite, SWT.NONE).setText("Baud:");
 		UploadBaud = new Combo(composite, SWT.BORDER | SWT.READ_ONLY);
 		gd = new GridData();
 		gd.horizontalAlignment = SWT.FILL;
 		UploadBaud.setLayoutData(gd);
-		String Bauds[] = {"57600","19200","115200"};// TODO Set actual usable bauds
+		String Bauds[] = { "57600", "19200", "115200" };// TODO Set actual
+														// usable bauds
 		UploadBaud.setItems(Bauds);
 
 		UploadBaud.addListener(SWT.Selection, fieldModifyListener);
 		UploadBaud.setEnabled(false);
 
 		// sets which fields can be edited
-		if(a!=null)//if arduino path setting was found
+		if (a != null)// if arduino path setting was found
 		{
-			//check that a is the correct arduino path
+			// check that a is the correct arduino path
 			pathModifyListener.handleEvent(new Event());
-			if(arduinoPathIsValid())
-			{//if it is the correct path
-				String lastBoard = SettingsManager.getSetting("BoardType",null);
-				if(lastBoard!=null)
+			if (arduinoPathIsValid()) {// if it is the correct path
+				String lastBoard = SettingsManager
+						.getSetting("BoardType", null);
+				if (lastBoard != null)
 					BoardType.setText(lastBoard);
-				if(lastBoard!=null && lastBoard.equals("Custom"))
-				{
-					String lastProc = SettingsManager.getSetting("MCU",null);
+				if (lastBoard != null && lastBoard.equals("Custom")) {
+					String lastProc = SettingsManager.getSetting("MCU", null);
 					ProcessorCombo.setText(lastProc);
-					String lastFreq = SettingsManager.getSetting("Frequency",null);
-					if(lastFreq!=null)
-							ProcessorFrequency.setText(lastFreq);
-					String lastProt = SettingsManager.getSetting("UploadProtocall", null);
-					if(lastProt!=null)
+					String lastFreq = SettingsManager.getSetting("Frequency",
+							null);
+					if (lastFreq != null)
+						ProcessorFrequency.setText(lastFreq);
+					String lastProt = SettingsManager.getSetting(
+							"UploadProtocall", null);
+					if (lastProt != null)
 						UploadProtocall.setText(lastProt);
-					String lastBaud = SettingsManager.getSetting("UploadBaud", null);
-					if(lastBaud!=null)
-						UploadBaud.setText(lastBaud);// TODO set to whatever was used last time;
+					String lastBaud = SettingsManager.getSetting("UploadBaud",
+							null);
+					if (lastBaud != null)
+						UploadBaud.setText(lastBaud);// TODO set to whatever was
+														// used last time;
 				}
 				String opt = SettingsManager.getSetting("Optimize", null);
-				if(opt!=null)
+				if (opt != null)
 					Optimize.setText(opt);// TODO set to whatever is settings
-				
+
 			}
 		}
 		setEditableFields();
@@ -259,16 +259,15 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 		Dialog.applyDialogFont(composite);
 	}
 
-	private void createLabel(Composite parent, int ncol, String t)
-	{
-		Label line = new Label(parent, SWT.HORIZONTAL
-				| SWT.BOLD);
+	private void createLabel(Composite parent, int ncol, String t) {
+		Label line = new Label(parent, SWT.HORIZONTAL | SWT.BOLD);
 		line.setText(t);
 		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
 		gridData.horizontalSpan = ncol;
 		line.setLayoutData(gridData);
-		
+
 	}
+
 	private void createLine(Composite parent, int ncol) {
 		Label line = new Label(parent, SWT.SEPARATOR | SWT.HORIZONTAL
 				| SWT.BOLD);
@@ -354,23 +353,21 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 	/**
 	 * Sets the uneditable items for a given board automatically
 	 */
-	private void setOptionsForBoard() 
-	{
+	private void setOptionsForBoard() {
 		Target t = new Target(new File(boardtxtPath));
 		String mapName = t.getBoardNamed(getBoardType());
-		Map<String,String> settings = t.getBoardSettings(mapName);
-		if(settings != null)
-		{
+		Map<String, String> settings = t.getBoardSettings(mapName);
+		if (settings != null) {
 			ProcessorCombo.setText(settings.get("build.mcu"));
 			ProcessorFrequency.setText(settings.get("build.f_cpu"));
 			UploadBaud.setText(settings.get("upload.speed"));
-			UploadProtocall.setText(settings.get("upload.protocol"));	
+			UploadProtocall.setText(settings.get("upload.protocol"));
 			// uno.upload.protocol=stk500
 			// uno.upload.maximum_size=32256
 			// uno.upload.speed=115200
 			// uno.build.mcu=atmega328p
 			// uno.build.f_cpu=16000000L
-			
+
 		}
 	}
 
