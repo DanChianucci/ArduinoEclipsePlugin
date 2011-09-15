@@ -19,7 +19,7 @@ public class PartitionScanner extends RuleBasedPartitionScanner {
 
 		//TODO Multiline comments should turn color when the 
 		//opening sequence is detected... not when both are detected.
-		rules[0] = new MultiLineRule("/*", "*/", comment);
+		rules[0] = new PatternRule("/*", "*/", comment, '\0', false, true);
 		rules[1] = new SingleLineRule("#",null,preprocessor);//new TagRule(preprocessor);
 
 		setPredicateRules(rules);
