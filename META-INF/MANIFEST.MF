@@ -20,6 +20,5 @@ Export-Package: arduinoplugin,
  arduinoplugin.builders,
  arduinoplugin.editors,
  arduinoplugin.natures,
- arduinoplugin.properties,
- arduinoplugin.wizards,
- arduinoplugin.wizards.pages
+ arduinoplugin.pages,
+ arduinoplugin.wizards
