@@ -1,17 +1,11 @@
 package arduinoplugin.base;
 
 import java.io.File;
+
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 
 public class PluginBase {
-/*	private static String MCU = "";
-	private static String FREQ = "";
-	private static String PATH = "";
-	private static String BOARD_TYPE = "";
-	private static String OPT = "";
-	private static String UPLOAD_PROT = "";
-	private static String UPLOAD_BAUD = "";*/
-
 	/**
 	 * modified from findFileInFolder from arduino Compiler.java
 	 * 
@@ -60,6 +54,12 @@ public class PluginBase {
 
 	public static String getArduinoLibPath() {
 		return getArduinoPath() + "libraries";
+	}
+	
+	public static String getBoardProgPath()
+	{
+		return getHardwarePath()+"arduino"+File.separator;
+		
 	}
 
 	public static String getArduinoPath() {
@@ -204,4 +204,28 @@ public class PluginBase {
 
 	public PluginBase() {
 	}
+
+	
+	//IS OD taken from processings base.java
+
+	  static public boolean isMacOS() {
+	    //return PApplet.platform == PConstants.MACOSX;
+	    return System.getProperty("os.name").indexOf("Mac") != -1;
+	  }
+
+	  static public boolean isWindows() {
+	    //return PApplet.platform == PConstants.WINDOWS;
+	    return System.getProperty("os.name").indexOf("Windows") != -1;
+	  }
+
+	  static public boolean isLinux() {
+	    //return PApplet.platform == PConstants.LINUX;
+	    return System.getProperty("os.name").indexOf("Linux") != -1;
+	  }
+	  
+	  static public IProject getProject()
+	  {
+		return ResourcesPlugin.getWorkspace().getRoot().getProject();
+		  
+	  }
 }
