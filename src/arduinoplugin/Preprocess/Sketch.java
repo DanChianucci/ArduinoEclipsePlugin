@@ -35,13 +35,16 @@ import arduinoplugin.base.SettingsManager;
 import arduinoplugin.builders.RunnerException;
 import arduinoplugin.builders.Compiler;
 import arduinoplugin.builders.Sizer;
+import arduinoplugin.uploader.AvrdudeUploader;
+import arduinoplugin.uploader.SerialException;
+import arduinoplugin.uploader.Uploader;
 
 /**
  * Stores information about files in the current sketch
  */
 public class Sketch {
 
-	/** The builld folder...not temporary in */
+	/** The build folder...not temporary in */
 	static private File OutputFolder;
 
 	/** List of library folders. */
@@ -92,6 +95,11 @@ public class Sketch {
 		OutputFolder = new File(BuildPath);
 		folder = new File(primaryFile.getParent());
 		load();
+	}
+	
+	public Sketch()
+	{
+		
 	}
 
 	/**
@@ -625,4 +633,19 @@ public class Sketch {
 		}
 		return buffer.toString();
 	}
+	
+	  public String upload(String buildPath, String suggestedClassName, boolean verbose,IProject proj)
+			    throws RunnerException, SerialException {
+
+			    Uploader uploader;
+
+			    // download the program
+			    //
+			    uploader = new AvrdudeUploader();
+			    boolean success = uploader.uploadUsingPreferences(buildPath,
+			                                                      suggestedClassName,
+			                                                      verbose,proj);
+
+			    return success ? suggestedClassName : null;
+			  }
 }
