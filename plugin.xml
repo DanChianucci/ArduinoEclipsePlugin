@@ -61,5 +61,58 @@
             name="Properties Page">
       </page>
    </extension>
+     <extension point="org.eclipse.ui.commands">
+     <category id="arduinoplugin.Toolbar.Category" name="DropDown Examples">
+     </category>
+     <command categoryId="arduinoplugin.Toolbar.Category" defaultHandler="arduinoplugin.Toolbars.DropDownHandler"  
+              id="arduinoplugin.Toolbar.dropdown.command" name="Drop">
+        <commandParameter id="arduinoplugin.Toolbar.dropdownmsg" name="Message" optional="true">
+        </commandParameter>
+     </command>
+  </extension>
+  <extension point="org.eclipse.ui.commandImages">
+     <image commandId="arduinoplugin.Toolbar.dropdown.command" icon="icons/arduino.gif">
+     </image>
+  </extension>
+
+  <extension point="org.eclipse.ui.menus">
+	<menuContribution locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+       <toolbar id="arduinoplugin.Toolbars.toolbar2">
+           <command commandId="arduinoplugin.Toolbar.dropdown.command" id="arduinoplugin.Toolbar.dropdownCommand" style="pulldown" 
+                    tooltip="Send them a message">
+           </command>
+        </toolbar>
+     </menuContribution>
+  </extension>
+  <extension
+        point="org.eclipse.ui.menus">
+     <menuContribution
+           locationURI="menu:arduinoplugin.Toolbar.dropdownCommand">
+        <command
+              commandId="arduinoplugin.Toolbar.dropdown.command"
+              label="Upload"
+              style="push"
+              tooltip="Upload the sketch via bootloader">
+           <parameter
+                 name="arduinoplugin.Toolbar.dropdownmsg"
+                 value="UploadCommand">
+           </parameter>
+        </command>
+        <separator
+              name="additions"
+              visible="false">
+        </separator>
+        <command
+              commandId="arduinoplugin.Toolbar.dropdown.command"
+              label="Msg - bye"
+              style="push">
+           <parameter
+                 name="arduinoplugin.Toolbar.dropdownmsg"
+                 value="Goodbye">
+           </parameter>
+        </command>
+     </menuContribution>
+  </extension>
+
 
 </plugin>
