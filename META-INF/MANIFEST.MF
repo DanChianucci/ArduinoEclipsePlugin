@@ -7,18 +7,40 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources;bundle-version="3.7.100",
  org.eclipse.ui.editors,
- org.eclipse.jface.text
+ org.eclipse.jface.text,
+ gnu.io.rxtx;bundle-version="2.1.7"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Version: 0.0.1
-Import-Package: org.eclipse.ui.dialogs,
+Import-Package: arduinoplugin.base,
+ org.eclipse.ui.dialogs,
  org.eclipse.ui.wizards.newresource
-Export-Package: arduinoplugin,
- arduinoplugin.Preprocess,
- arduinoplugin.Projects,
- arduinoplugin.base,
- arduinoplugin.builders,
- arduinoplugin.editors,
- arduinoplugin.natures,
- arduinoplugin.pages,
- arduinoplugin.wizards
+Export-Package: arduinoplugin;uses:="org.eclipse.ui.plugin,org.osgi.framework",
+ arduinoplugin.Preprocess;uses:="org.eclipse.core.resources",
+ arduinoplugin.Projects;uses:="org.eclipse.core.resources",
+ arduinoplugin.Toolbars;uses:="org.eclipse.core.commands",
+ arduinoplugin.base;uses:="org.eclipse.core.resources",
+ arduinoplugin.builders;uses:="arduinoplugin.Preprocess,org.eclipse.core.runtime,org.eclipse.core.resources",
+ arduinoplugin.editors;
+  uses:="org.eclipse.jface.text,
+   org.eclipse.jface.text.source,
+   org.eclipse.jface.text.presentation,
+   org.eclipse.swt.graphics,
+   org.eclipse.jface.text.rules,
+   org.eclipse.ui.editors.text",
+ arduinoplugin.natures;uses:="org.eclipse.core.resources",
+ arduinoplugin.pages;
+  uses:="org.eclipse.jface.wizard,
+   org.eclipse.jface.resource,
+   org.eclipse.ui.dialogs,
+   org.eclipse.swt.widgets",
+ arduinoplugin.uploader;uses:="org.eclipse.core.resources,gnu.io,arduinoplugin.builders",
+ arduinoplugin.wizards;
+  uses:="org.eclipse.jface.wizard,
+   org.eclipse.osgi.util,
+   org.eclipse.core.runtime,
+   org.eclipse.ui,
+   org.eclipse.jface.viewers",
+ gnu.io
+Bundle-ClassPath: lib/RXTXcomm.jar,
+ lib/Nativelib/
