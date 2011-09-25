@@ -37,7 +37,7 @@ import java.util.*;
 
 import arduinoplugin.builders.MessageConsumer;
 
-
+@SuppressWarnings("all")
 public class Serial implements SerialPortEventListener {
 
   //PApplet parent;
@@ -158,7 +158,7 @@ public Serial(String iname, int irate,
     }
     
     if (port == null) {
-      throw new SerialNotFoundException("Serial port '" + iname + "' not found.  Did you select the right one from the Tools > Serial Port menu?");
+      throw new SerialNotFoundException("Serial port '" + iname + "' not found.  Did you select the right one?");
     }
   }
 

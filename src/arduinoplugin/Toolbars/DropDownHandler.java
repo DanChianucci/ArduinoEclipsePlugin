@@ -14,7 +14,6 @@ import org.eclipse.core.runtime.CoreException;
 import arduinoplugin.Preprocess.Sketch;
 import arduinoplugin.builders.RunnerException;
 import arduinoplugin.natures.ArduinoProjectNature;
-import arduinoplugin.uploader.Serial;
 import arduinoplugin.uploader.SerialException;
 
 public class DropDownHandler extends AbstractHandler {
