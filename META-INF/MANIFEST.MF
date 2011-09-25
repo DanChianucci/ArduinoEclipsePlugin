@@ -7,13 +7,11 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources;bundle-version="3.7.100",
  org.eclipse.ui.editors,
- org.eclipse.jface.text,
- gnu.io.rxtx;bundle-version="2.1.7"
+ org.eclipse.jface.text
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Version: 0.0.1
-Import-Package: arduinoplugin.base,
- org.eclipse.ui.dialogs,
+Import-Package: org.eclipse.ui.dialogs,
  org.eclipse.ui.wizards.newresource
 Export-Package: arduinoplugin;uses:="org.eclipse.ui.plugin,org.osgi.framework",
  arduinoplugin.Preprocess;uses:="org.eclipse.core.resources",
@@ -42,5 +40,7 @@ Export-Package: arduinoplugin;uses:="org.eclipse.ui.plugin,org.osgi.framework",
    org.eclipse.ui,
    org.eclipse.jface.viewers",
  gnu.io
-Bundle-ClassPath: lib/RXTXcomm.jar,
- lib/Nativelib/
+Bundle-ClassPath: lib/RXTXcomm.jar
+Bundle-NativeCode: lib/Nativelib/rxtxParallel.dll;
+ lib/nativelib/rxtxSerial.dll;
+ osname=Win32; processor=x86-64
