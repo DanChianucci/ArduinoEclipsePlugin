@@ -27,11 +27,12 @@ Eventule Features include:
 
 	New Arduino Project Wizard			-Completed
 	Import Arduino Project Wizard		-Not Started
-	Settings Editor     				-Not Started (EASY ONCE OTHER STUFF IS FIGURED OUT)
+	Settings Editor     				-Started(Saves to workspace only...need to change)
 	Custom Nature						-Completed
 	Arduino Builder						-Completed
-	Editor for pde files				-Started
+	Editor for pde files				-Started (just have to add keyword highlighting)
 	Saved preferences					-Completed
+	Uploader							-Started (need to add support to find com port)
 
 	
 New Arduino Project Wizard:
@@ -67,9 +68,8 @@ Arduino Settings Editor:
 	
 	After:	 Project Wide Settings will be saved
 	
-	So Far: -Not Started
-			-Really will just need to make another instance of the settings page which is already 
-                being written for the new project wizard
+	So Far: -Settings page is displayed, still some quirks in the ui.  
+			-settings are saved to the workspace, not to the project (need to change this)
 	
 Custom Nature:
 	What:	-The Arduino project nature will link the project with other arduino plugin tools
