@@ -348,7 +348,7 @@ public class Sketch {
 		return primaryClassName;
 	}
 
-	//Copied from base.jave in arduino source
+	//Copied from base.java in arduino source
 	static public void copyFile(File sourceFile,
 			File targetFile) throws IOException {
 		InputStream from =
@@ -488,9 +488,7 @@ public class Sketch {
 	protected void size(String buildPath, String suggestedClassName)
 			throws RunnerException {
 		long size = 0;
-		// TODO get the max size for the different boards
-		//have to first save the max size to the settings
-		String maxsizeString = SettingsManager.getSetting(SettingKeys.uploadMaxSizeKey, project);
+		String maxsizeString = SettingsManager.getSetting(SettingKeys.uploadMaxSizeKey,project);
 		if (maxsizeString == null)
 			return;
 		long maxsize = Integer.parseInt(maxsizeString);
