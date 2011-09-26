@@ -18,9 +18,8 @@ import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 
 import arduinoplugin.Projects.ArduinoProject;
-//import arduinoplugin.base.PluginBase;
 import arduinoplugin.base.SettingsManager;
-import arduinoplugin.wizards.pages.ArduinoSettingsPage;
+import arduinoplugin.pages.ArduinoSettingsPage;
 
 
 
@@ -32,7 +31,7 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
 
 	
 	private WizardNewProjectCreationPage _pageOne;
-	private ArduinoSettingsPage _pageTwo;
+	private ArduinoSettingsPage _pageTwo;//ArduinoSettingsPage _pageTwo;
 	private IConfigurationElement _configurationElement;
 	private static final String WIZARD_NAME = "New Arduino Project"; //$NON-NLS-1$
 	private static final String PAGE_NAME = "Arduino Project Wizard"; //$NON-NLS-1$
@@ -51,7 +50,7 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
 	    _pageOne.setTitle(Messages.NewProjectWizard_pageOne_Title);
 	    _pageOne.setDescription(Messages.NewProjectWizard_pageOne_Description);
 	    
-	   _pageTwo = new ArduinoSettingsPage(PAGE_NAME);
+	   _pageTwo = new ArduinoSettingsPage(PAGE_NAME);//new ArduinoSettingsPage(PAGE_NAME);
 	   _pageTwo.setTitle(Messages.NewProjectWizard_pageTwo_Title);
 	   _pageTwo.setDescription(Messages.NewProjectWizard_pageTwo_Description);
 	    
@@ -84,15 +83,14 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
 	    
 	    IProject p = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
 	    
-	    //TODO fix the static/non static issue;
+	    
 	    SettingsManager.saveBothSetting("ArduinoPath",_pageTwo.getArduinoPath(),p);
 	    SettingsManager.saveBothSetting("BoardType",_pageTwo.getBoardType(),p);
 	    SettingsManager.saveBothSetting("Optimize",_pageTwo.getOptimizeSetting(),p);
 	    SettingsManager.saveBothSetting("Frequency",_pageTwo.getFrequency(),p);
 	    SettingsManager.saveBothSetting("MCU",_pageTwo.getProcessor(),p);
 	    SettingsManager.saveBothSetting("UploadProtocall",_pageTwo.getUploadProtocall(),p);
-	    SettingsManager.saveBothSetting("UploadBaud",_pageTwo.getUploadBaud(),p);
-	    
+	    SettingsManager.saveBothSetting("UploadBaud",_pageTwo.getUploadBaud(),p);	    
 	    BasicNewProjectResourceWizard.updatePerspective(_configurationElement);
 	    
 	    return true;

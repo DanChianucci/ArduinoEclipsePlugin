@@ -31,16 +31,20 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 
 import arduinoplugin.base.PluginBase;
+import arduinoplugin.base.SettingsManager;
 import arduinoplugin.builders.RunnerException;
 import arduinoplugin.builders.Compiler;
 import arduinoplugin.builders.Sizer;
+import arduinoplugin.uploader.AvrdudeUploader;
+import arduinoplugin.uploader.SerialException;
+import arduinoplugin.uploader.Uploader;
 
 /**
  * Stores information about files in the current sketch
  */
 public class Sketch {
 
-	/** The builld folder...not temporary in */
+	/** The build folder...not temporary in */
 	static private File OutputFolder;
 
 	/** List of library folders. */
@@ -81,9 +85,8 @@ public class Sketch {
 	public Sketch(String path, String BuildPath) throws IOException {
 
 		primaryFile = new File(path);
-		
-		//TODO IDK IF THIS WILL WORK
 		project = ResourcesPlugin.getWorkspace().getRoot().getProject(primaryFile.getParentFile().getName()); 
+		
 		// get the name of the sketch by chopping .pde or .java
 		// off of the main file name
 		String mainFilename = primaryFile.getName();
@@ -92,6 +95,11 @@ public class Sketch {
 		OutputFolder = new File(BuildPath);
 		folder = new File(primaryFile.getParent());
 		load();
+	}
+	
+	public Sketch()
+	{
+		
 	}
 
 	/**
@@ -476,12 +484,12 @@ public class Sketch {
 		return null;
 	}
 
-	@SuppressWarnings("unused")
 	protected void size(String buildPath, String suggestedClassName)
 			throws RunnerException {
 		long size = 0;
 		// TODO get the max size for the different boards
-		String maxsizeString = "1";//TODO set actual size//PluginBase.getBoardPreferences().get("upload.maximum_size");
+		//have to first save the max size to the settings
+		String maxsizeString = SettingsManager.getSetting("upload.maximum_size", project);
 		if (maxsizeString == null)
 			return;
 		long maxsize = Integer.parseInt(maxsizeString);
@@ -625,4 +633,21 @@ public class Sketch {
 		}
 		return buffer.toString();
 	}
+	
+	  public String upload(String buildPath, String suggestedClassName, boolean verbose,IProject proj)
+			    throws RunnerException, SerialException {
+
+			    Uploader uploader;
+
+			    // download the program
+			    //
+			    uploader = new AvrdudeUploader();
+			    suggestedClassName = suggestedClassName.substring(0, suggestedClassName.indexOf(".pde"));
+			    suggestedClassName = suggestedClassName +".cpp";
+			    boolean success = uploader.uploadUsingPreferences(buildPath,
+			                                                      suggestedClassName,
+			                                                      verbose,proj);
+
+			    return success ? suggestedClassName : null;
+			  }
 }

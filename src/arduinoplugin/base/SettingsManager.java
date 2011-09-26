@@ -8,13 +8,9 @@ import org.osgi.service.prefs.BackingStoreException;
 
 public class SettingsManager 
 {	
-	static IProject p;
 	
 	static String PluginID = "ArduinoPlugin";
 	
-	SettingsManager()
-	{
-	}
 	
 	public static void saveWorkspaceSetting(String key,String value) {
 		  // saves plugin preferences at the workspace level
@@ -43,9 +39,9 @@ public class SettingsManager
 		
 		
 		
-		public static void saveProjectSetting(String key,String value) {
+		public static void saveProjectSetting(String key,String value,IProject project) {
 			  // saves plugin preferences at the project level
-			  IEclipsePreferences prefs = new ProjectScope(p).getNode(PluginID); 
+			  IEclipsePreferences prefs = new ProjectScope(project).getNode(PluginID); 
 
 			  prefs.put(key,value);
 
@@ -57,8 +53,8 @@ public class SettingsManager
 			  }
 			}
 
-			private static String getProjectSetting(String key) {
-				 IEclipsePreferences prefs = new ProjectScope(p).getNode(PluginID);
+			private static String getProjectSetting(String key,IProject project) {
+				 IEclipsePreferences prefs = new ProjectScope(project).getNode(PluginID);
 			   try {
 				prefs.sync();
 			} catch (BackingStoreException e) {
@@ -76,8 +72,7 @@ public class SettingsManager
 				//get the project setting
 				if(project != null)
 				{
-					p=project;
-				 	setting = getProjectSetting(key);
+				 	setting = getProjectSetting(key,project);
 				}
 				
 				//if project setting is missing or project is not specified, get the workspace setting
@@ -91,9 +86,8 @@ public class SettingsManager
 
 			public static void saveBothSetting(String key, String value, IProject project) 
 			{
-				p = project;
-				
-				saveProjectSetting(key,value);
+				if(project != null)
+					saveProjectSetting(key,value,project);
 				saveWorkspaceSetting(key,value);
 				
 			}
