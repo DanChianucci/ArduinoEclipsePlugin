@@ -642,6 +642,8 @@ public class Sketch {
 			    // download the program
 			    //
 			    uploader = new AvrdudeUploader();
+			    suggestedClassName = suggestedClassName.substring(0, suggestedClassName.indexOf(".pde"));
+			    suggestedClassName = suggestedClassName +".cpp";
 			    boolean success = uploader.uploadUsingPreferences(buildPath,
 			                                                      suggestedClassName,
 			                                                      verbose,proj);
