@@ -39,6 +39,7 @@ import arduinoplugin.base.PluginBase;
 import arduinoplugin.base.SettingsManager;
 import arduinoplugin.base.Target;
 import arduinoplugin.builders.RunnerException;
+import arduinoplugin.pages.SettingKeys;
 
 public class AvrdudeUploader extends Uploader {
 	//IProject thisProj = null;
@@ -52,15 +53,15 @@ public class AvrdudeUploader extends Uploader {
 		// Map<String, String> boardPreferences = Base.getBoardPreferences();
 
 		// Gets project setting falls back on workspace setting
-		String uploadUsing = "bootloader";//SettingsManager.getSetting("upload.using",
+		String uploadUsing = "bootloader";//SettingsManager.getSetting("upload.using", //$NON-NLS-1$
 				//thisProj);
 
-		if (uploadUsing.equals("bootloader")) {
+		if (uploadUsing.equals("bootloader")) { //$NON-NLS-1$
 			return uploadViaBootloader(buildPath, className, thisProj);
 		} 
 		else
 		{
-			System.out.print("UPLOAD USING BOOTLOADER IS THE ONLY SUPPORTED UPLOAD METHOD");
+			System.out.print("UPLOAD USING BOOTLOADER IS THE ONLY SUPPORTED UPLOAD METHOD"); //$NON-NLS-1$
 			return false;
 //		 Target t;
 //		
@@ -88,39 +89,39 @@ public class AvrdudeUploader extends Uploader {
 			throws RunnerException, SerialException {
 		// TODO actual project not null get the target
 		Target target = new Target(new File(PluginBase.getBoardProgPath()));
-		String mapName = target.getBoardNamed(SettingsManager.getSetting("BoardType", thisProj));
+		String mapName = target.getBoardNamed(SettingsManager.getSetting(SettingKeys.BoardTypeKey, thisProj));
 		Map<String, String> boardPreferences = target.getBoardSettings(mapName);
 		List<String> commandDownloader = new ArrayList<String>();
 		
-		if(SettingsManager.getSetting("BoardType",thisProj).equals("Custom"))
+		if(SettingsManager.getSetting(SettingKeys.BoardTypeKey,thisProj).equals("Custom")) //$NON-NLS-2$
 		{
 			boardPreferences = new LinkedHashMap<String,String>();
-			boardPreferences.put("upload.protocol", SettingsManager.getSetting("UploadProtocall", thisProj));
-			boardPreferences.put("upload.speed", SettingsManager.getSetting("UploadBaud", thisProj));
-			boardPreferences.put("upload.disable_flushing",SettingsManager.getSetting("flushing", thisProj));
+			boardPreferences.put(SettingKeys.UploadProtocolKey, SettingsManager.getSetting(SettingKeys.UploadProtocolKey, thisProj));
+			boardPreferences.put(SettingKeys.UploadSpeedKey, SettingsManager.getSetting(SettingKeys.UploadSpeedKey, thisProj));
+			boardPreferences.put(SettingKeys.disableFlushingKey,SettingsManager.getSetting(SettingKeys.disableFlushingKey, thisProj));
 		}
 			
 			
 			
-		String protocol = boardPreferences.get("upload.protocol");
+		String protocol = boardPreferences.get(SettingKeys.UploadProtocolKey);
 
 		// avrdude wants "stk500v1" to distinguish it from stk500v2
-		if (protocol.equals("stk500"))
-			protocol = "stk500v1";
-		commandDownloader.add("-c" + protocol);
+		if (protocol.equals("stk500")) //$NON-NLS-1$
+			protocol = "stk500v1"; //$NON-NLS-1$
+		commandDownloader.add("-c" + protocol); //$NON-NLS-1$
 		commandDownloader.add(
 		// TODO get actual project?
-				"-P" + (PluginBase.isWindows() ? "\\\\.\\" : "")+"COM3");
+				"-P" + (PluginBase.isWindows() ? "\\\\.\\" : "")+"COM3"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 						//+ SettingsManager.getSetting("serial.port", thisProj));
-		commandDownloader.add("-b"
-				+ Integer.parseInt(boardPreferences.get("upload.speed")));
-		commandDownloader.add("-D"); // don't erase
-		commandDownloader.add("-Uflash:w:" + buildPath + File.separator
-				+ className + ".hex:i");
+		commandDownloader.add("-b" //$NON-NLS-1$
+				+ Integer.parseInt(boardPreferences.get(SettingKeys.UploadSpeedKey)));
+		commandDownloader.add("-D"); // don't erase //$NON-NLS-1$
+		commandDownloader.add("-Uflash:w:" + buildPath + File.separator //$NON-NLS-1$
+				+ className + ".hex:i"); //$NON-NLS-1$
 
-		if (boardPreferences.get("upload.disable_flushing") == null
-				|| boardPreferences.get("upload.disable_flushing")
-						.toLowerCase().equals("false")) {
+		if (boardPreferences.get(SettingKeys.disableFlushingKey) == null
+				|| boardPreferences.get(SettingKeys.disableFlushingKey)
+						.toLowerCase().equals("false")) { //$NON-NLS-1$
 			flushSerialBuffer();
 		}
 
@@ -283,7 +284,7 @@ public class AvrdudeUploader extends Uploader {
 
 	public boolean avrdude(Collection<String> params,IProject thisProj) throws RunnerException {
 		List<String> commandDownloader = new ArrayList<String>();
-		commandDownloader.add("avrdude");
+		commandDownloader.add("avrdude"); //$NON-NLS-1$
 
 		// Point avrdude at its config file since it's in a non-standard
 		// location.
@@ -291,25 +292,25 @@ public class AvrdudeUploader extends Uploader {
 			// ???: is it better to have Linux users install avrdude themselves,
 			// in
 			// a way that it can find its own configuration file?
-			commandDownloader.add("-C" + PluginBase.getHardwarePath()
-					+ "/tools/avrdude.conf");
+			commandDownloader.add("-C" + PluginBase.getHardwarePath() //$NON-NLS-1$
+					+ "/tools/avrdude.conf"); //$NON-NLS-1$
 		} else {
-			commandDownloader.add("-C" + PluginBase.getHardwarePath()
-					+ "tools"+File.separator+"avr"+File.separator+"etc"+File.separator+"avrdude.conf");
+			commandDownloader.add("-C" + PluginBase.getHardwarePath() //$NON-NLS-1$
+					+ "tools"+File.separator+"avr"+File.separator+"etc"+File.separator+"avrdude.conf"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		}
 
 		if (verbose
-				|| SettingsManager.getSetting("upload.verbose", thisProj) == "true") {
-			commandDownloader.add("-v");
-			commandDownloader.add("-v");
-			commandDownloader.add("-v");
-			commandDownloader.add("-v");
+				|| SettingsManager.getSetting(SettingKeys.uploadVerboseKey, thisProj) == "true") { //$NON-NLS-2$
+			commandDownloader.add("-v"); //$NON-NLS-1$
+			commandDownloader.add("-v"); //$NON-NLS-1$
+			commandDownloader.add("-v"); //$NON-NLS-1$
+			commandDownloader.add("-v"); //$NON-NLS-1$
 		} else {
-			commandDownloader.add("-q");
-			commandDownloader.add("-q");
+			commandDownloader.add("-q"); //$NON-NLS-1$
+			commandDownloader.add("-q"); //$NON-NLS-1$
 		}
 		// TODO get actual project not null
-		commandDownloader.add("-p" + SettingsManager.getSetting("MCU", thisProj));
+		commandDownloader.add("-p" + SettingsManager.getSetting(SettingKeys.ProcessorTypeKey, thisProj)); //$NON-NLS-1$
 		commandDownloader.addAll(params);
 
 		return executeUploadCommand(commandDownloader);

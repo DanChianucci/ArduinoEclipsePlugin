@@ -36,14 +36,15 @@ import arduinoplugin.base.SettingsManager;
 import arduinoplugin.builders.MessageConsumer;
 import arduinoplugin.builders.MessageSiphon;
 import arduinoplugin.builders.RunnerException;
+import arduinoplugin.pages.SettingKeys;
 import arduinoplugin.uploader.Serial;
 
 
 public abstract class Uploader implements MessageConsumer  {
   static final String BUGS_URL =
-    "https://developer.berlios.de/bugs/?group_id=3590";
+    "https://developer.berlios.de/bugs/?group_id=3590"; //$NON-NLS-1$
   static final String SUPER_BADNESS =
-    "Compiler error, please submit this code to " + BUGS_URL;
+    "Compiler error, please submit this code to " + BUGS_URL; //$NON-NLS-1$
 
   RunnerException exception;
   //PdePreferences preferences;
@@ -112,17 +113,17 @@ public abstract class Uploader implements MessageConsumer  {
       String avrBasePath;
       
       if(PluginBase.isLinux()) {
-        avrBasePath = new String(PluginBase.getHardwarePath() + "/tools/"); 
+        avrBasePath = new String(PluginBase.getHardwarePath() + "/tools/");  //$NON-NLS-1$
       }
       else {
-        avrBasePath = new String(PluginBase.getHardwarePath() + "/tools/avr/bin/"); 
+        avrBasePath = new String(PluginBase.getHardwarePath() + "/tools/avr/bin/");  //$NON-NLS-1$
       }
       
       commandArray[0] = avrBasePath + commandArray[0];
       //TODO add actual project instead of null
-      if (verbose || SettingsManager.getSetting("upload.verbose",null)=="true") {
+      if (verbose || SettingsManager.getSetting(SettingKeys.uploadVerboseKey,null)=="true") { //$NON-NLS-2$
         for(int i = 0; i < commandArray.length; i++) {
-          System.out.print(commandArray[i] + " ");
+          System.out.print(commandArray[i] + " "); //$NON-NLS-1$
         }
         System.out.println();
       }
@@ -149,7 +150,7 @@ public abstract class Uploader implements MessageConsumer  {
         return false;
     } catch (Exception e) {
       String msg = e.getMessage();
-      if ((msg != null) && (msg.indexOf("uisp: not found") != -1) && (msg.indexOf("avrdude: not found") != -1)) {
+      if ((msg != null) && (msg.indexOf("uisp: not found") != -1) && (msg.indexOf("avrdude: not found") != -1)) { //$NON-NLS-1$ //$NON-NLS-2$
         //System.err.println("uisp is missing");
         //JOptionPane.showMessageDialog(editor.base,
         //                              "Could not find the compiler.\n" +
@@ -192,7 +193,7 @@ public abstract class Uploader implements MessageConsumer  {
     System.err.print(s);
 
     // ignore cautions
-    if (s.indexOf("Error") != -1) {
+    if (s.indexOf("Error") != -1) { //$NON-NLS-1$
       //exception = new RunnerException(s+" Check the serial port selected or your Board is connected");
       //System.out.println(s);
       notFoundError = true;
@@ -200,21 +201,21 @@ public abstract class Uploader implements MessageConsumer  {
     }
     if(notFoundError) {
       //System.out.println("throwing something");
-      exception = new RunnerException("the selected serial port "+s+" does not exist or your board is not connected");
+      exception = new RunnerException("the selected serial port "+s+" does not exist or your board is not connected"); //$NON-NLS-1$ //$NON-NLS-2$
       return;
     }
-    if (s.indexOf("Device is not responding") != -1 ) {
-      exception =  new RunnerException("Device is not responding, check the right serial port is selected or RESET the board right before exporting");
+    if (s.indexOf("Device is not responding") != -1 ) { //$NON-NLS-1$
+      exception =  new RunnerException("Device is not responding, check the right serial port is selected or RESET the board right before exporting"); //$NON-NLS-1$
       return;
     }
-    if (s.indexOf("Programmer is not responding") != -1 ||
-        s.indexOf("programmer is not responding") != -1 ||
-        s.indexOf("protocol error") != -1) {
-      exception = new RunnerException("Problem uploading to board.  See http://www.arduino.cc/en/Guide/Troubleshooting#upload for suggestions.");
+    if (s.indexOf("Programmer is not responding") != -1 || //$NON-NLS-1$
+        s.indexOf("programmer is not responding") != -1 || //$NON-NLS-1$
+        s.indexOf("protocol error") != -1) { //$NON-NLS-1$
+      exception = new RunnerException("Problem uploading to board.  See http://www.arduino.cc/en/Guide/Troubleshooting#upload for suggestions."); //$NON-NLS-1$
       return;
     }
-    if (s.indexOf("Expected signature") != -1) {
-      exception = new RunnerException("Wrong microcontroller found.  Did you select the right board from the Tools > Board menu?");
+    if (s.indexOf("Expected signature") != -1) { //$NON-NLS-1$
+      exception = new RunnerException("Wrong microcontroller found.  Did you select the right board from the Tools > Board menu?"); //$NON-NLS-1$
       return;
     }
   }

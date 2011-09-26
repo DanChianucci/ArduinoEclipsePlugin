@@ -20,6 +20,7 @@ import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import arduinoplugin.Projects.ArduinoProject;
 import arduinoplugin.base.SettingsManager;
 import arduinoplugin.pages.ArduinoSettingsPage;
+import arduinoplugin.pages.SettingKeys;
 
 
 
@@ -84,13 +85,13 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
 	    IProject p = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
 	    
 	    
-	    SettingsManager.saveBothSetting("ArduinoPath",_pageTwo.getArduinoPath(),p);
-	    SettingsManager.saveBothSetting("BoardType",_pageTwo.getBoardType(),p);
-	    SettingsManager.saveBothSetting("Optimize",_pageTwo.getOptimizeSetting(),p);
-	    SettingsManager.saveBothSetting("Frequency",_pageTwo.getFrequency(),p);
-	    SettingsManager.saveBothSetting("MCU",_pageTwo.getProcessor(),p);
-	    SettingsManager.saveBothSetting("UploadProtocall",_pageTwo.getUploadProtocall(),p);
-	    SettingsManager.saveBothSetting("UploadBaud",_pageTwo.getUploadBaud(),p);	    
+	    SettingsManager.saveBothSetting(SettingKeys.ArduinoPathKey,_pageTwo.getArduinoPath(),p);
+	    SettingsManager.saveBothSetting(SettingKeys.BoardTypeKey,_pageTwo.getBoardType(),p);
+	    SettingsManager.saveBothSetting(SettingKeys.OptimizeKey,_pageTwo.getOptimizeSetting(),p);
+	    SettingsManager.saveBothSetting(SettingKeys.FrequencyKey,_pageTwo.getFrequency(),p);
+	    SettingsManager.saveBothSetting(SettingKeys.ProcessorTypeKey,_pageTwo.getProcessor(),p);
+	    SettingsManager.saveBothSetting(SettingKeys.UploadProtocolKey,_pageTwo.getUploadProtocall(),p);
+	    SettingsManager.saveBothSetting(SettingKeys.UploadSpeedKey,_pageTwo.getUploadBaud(),p);	    
 	    BasicNewProjectResourceWizard.updatePerspective(_configurationElement);
 	    
 	    return true;

@@ -56,8 +56,8 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 		public void handleEvent(Event e) {
 			if (arduinoPathIsValid()) {
 				ArduinoPath = ArduinoPathInput.getText();
-				boardtxtPath = ArduinoPath + File.separator + "hardware"
-						+ File.separator + "arduino";
+				boardtxtPath = ArduinoPath + File.separator + "hardware" //$NON-NLS-1$
+						+ File.separator + "arduino"; //$NON-NLS-1$
 				loadBoards();
 			}
 			setEditableFields();
@@ -98,12 +98,12 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 		gl.numColumns = ncol;
 		composite.setLayout(gl);
 
-		createLabel(composite, ncol, "Environment Settings");
+		createLabel(composite, ncol, "Environment Settings"); //$NON-NLS-1$
 		// **********************************************************************************
 		// ************************** Arduino Environment
 		// *********************************
 		// **********************************************************************************
-		new Label(composite, SWT.NONE).setText("Arduino Location");
+		new Label(composite, SWT.NONE).setText("Arduino Location"); //$NON-NLS-1$
 		// TODO Find ArdEnv automatically
 		ArduinoPathInput = new Text(composite, SWT.BORDER);
 		String a = SettingsManager.getSetting("ArduinoPath", null);
@@ -117,7 +117,7 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 		ArduinoPathInput.addListener(SWT.Modify, pathModifyListener);
 
 		BrowseButton = new Button(composite, SWT.NONE);
-		BrowseButton.setText("Browse...");
+		BrowseButton.setText("Browse..."); //$NON-NLS-1$
 		gd = new GridData();
 		gd.horizontalAlignment = SWT.LEAD;
 		BrowseButton.setLayoutData(gd);
@@ -129,12 +129,12 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 		});
 
 		createLine(composite, ncol);
-		createLabel(composite, ncol, "General Settings");
+		createLabel(composite, ncol, "General Settings"); //$NON-NLS-1$
 
 		// **********************************************************************************
 		// *************************************BoardType************************************
 		// **********************************************************************************
-		new Label(composite, SWT.NONE).setText("Board:");
+		new Label(composite, SWT.NONE).setText("Board:"); //$NON-NLS-1$
 		BoardType = new Combo(composite, SWT.BORDER | SWT.READ_ONLY);
 		gd = new GridData();
 		gd.horizontalAlignment = SWT.FILL;
@@ -145,24 +145,24 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 		// **********************************************************************************
 		// ********************************Optimization*************************************
 		// **********************************************************************************
-		new Label(composite, SWT.NONE).setText("Optimization Level:");
+		new Label(composite, SWT.NONE).setText("Optimization Level:"); //$NON-NLS-1$
 		Optimize = new Combo(composite, SWT.BORDER | SWT.READ_ONLY);
 		gd = new GridData();
 		gd.horizontalAlignment = SWT.FILL;
 		Optimize.setLayoutData(gd);
-		String OptimizeOptions[] = { "0", "1", "2", "3", "s" };
+		String OptimizeOptions[] = { "0", "1", "2", "3", "s" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 		Optimize.setItems(OptimizeOptions);
 		Optimize.setEnabled(false);
 
 		createLine(composite, ncol);
-		createLabel(composite, ncol, "Processor Settings");
+		createLabel(composite, ncol, "Processor Settings"); //$NON-NLS-1$
 
 		// **********************************************************************************
 		// ***************************** Processor Type
 		// ***********************************
 		// **********************************************************************************
 
-		new Label(composite, SWT.NONE).setText("Processor:");
+		new Label(composite, SWT.NONE).setText("Processor:"); //$NON-NLS-1$
 		ProcessorCombo = new Combo(composite, SWT.BORDER | SWT.READ_ONLY);
 		gd = new GridData();
 		gd.horizontalAlignment = SWT.FILL;
@@ -177,7 +177,7 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 		// ***************************** ProcessorFreq
 		// ***********************************
 		// **********************************************************************************
-		new Label(composite, SWT.NONE).setText("Processor Frequency (Hz):");
+		new Label(composite, SWT.NONE).setText("Processor Frequency (Hz):"); //$NON-NLS-1$
 		ProcessorFrequency = new Text(composite, SWT.BORDER);
 		gd = new GridData();
 		gd.horizontalAlignment = SWT.FILL;
@@ -187,19 +187,19 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 		ProcessorFrequency.setEnabled(false);
 
 		createLine(composite, ncol);
-		createLabel(composite, ncol, "Upload Settings");
+		createLabel(composite, ncol, "Upload Settings"); //$NON-NLS-1$
 
 		// **********************************************************************************
 		// ***************************** Upload Protocall
 		// *********************************
 		// **********************************************************************************
 
-		new Label(composite, SWT.NONE).setText("Upload Protocall:");
+		new Label(composite, SWT.NONE).setText("Upload Protocall:"); //$NON-NLS-1$
 		UploadProtocall = new Combo(composite, SWT.BORDER | SWT.READ_ONLY);
 		gd = new GridData();
 		gd.horizontalAlignment = SWT.FILL;
 		UploadProtocall.setLayoutData(gd);
-		String Protocalls[] = { "stk500", "stk500v2" };
+		String Protocalls[] = { "stk500", "stk500v2" }; //$NON-NLS-1$ //$NON-NLS-2$
 		// TODO set actual protocalls
 		UploadProtocall.setItems(Protocalls);
 		UploadProtocall.addListener(SWT.Selection, fieldModifyListener);
@@ -208,12 +208,12 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 		// ****************************** Uploader Baud
 		// ***********************************
 		// **********************************************************************************
-		new Label(composite, SWT.NONE).setText("Baud:");
+		new Label(composite, SWT.NONE).setText("Baud:"); //$NON-NLS-1$
 		UploadBaud = new Combo(composite, SWT.BORDER | SWT.READ_ONLY);
 		gd = new GridData();
 		gd.horizontalAlignment = SWT.FILL;
 		UploadBaud.setLayoutData(gd);
-		String Bauds[] = { "57600", "19200", "115200" };// TODO Set actual
+		String Bauds[] = { "57600", "19200", "115200" };// TODO Set actual //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 														// usable bauds
 		UploadBaud.setItems(Bauds);
 
@@ -227,27 +227,27 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 			pathModifyListener.handleEvent(new Event());
 			if (arduinoPathIsValid()) {// if it is the correct path
 				String lastBoard = SettingsManager
-						.getSetting("BoardType", null);
+						.getSetting(SettingKeys.BoardTypeKey, null);
 				if (lastBoard != null)
 					BoardType.setText(lastBoard);
-				if (lastBoard != null && lastBoard.equals("Custom")) {
-					String lastProc = SettingsManager.getSetting("MCU", null);
+				if (lastBoard != null && lastBoard.equals("Custom")) { //$NON-NLS-1$
+					String lastProc = SettingsManager.getSetting(SettingKeys.ProcessorTypeKey, null);
 					ProcessorCombo.setText(lastProc);
-					String lastFreq = SettingsManager.getSetting("Frequency",
+					String lastFreq = SettingsManager.getSetting(SettingKeys.FrequencyKey,
 							null);
 					if (lastFreq != null)
 						ProcessorFrequency.setText(lastFreq);
 					String lastProt = SettingsManager.getSetting(
-							"UploadProtocall", null);
+							SettingKeys.UploadProtocolKey, null);
 					if (lastProt != null)
 						UploadProtocall.setText(lastProt);
-					String lastBaud = SettingsManager.getSetting("UploadBaud",
+					String lastBaud = SettingsManager.getSetting(SettingKeys.UploadSpeedKey,
 							null);
 					if (lastBaud != null)
 						UploadBaud.setText(lastBaud);// TODO set to whatever was
 														// used last time;
 				}
-				String opt = SettingsManager.getSetting("Optimize", null);
+				String opt = SettingsManager.getSetting("Optimize", null); //$NON-NLS-1$
 				if (opt != null)
 					Optimize.setText(opt);// TODO set to whatever is settings
 
@@ -278,43 +278,43 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 
 	public String getArduinoPath() {
 		if (ArduinoPathInput == null)
-			return "";
+			return ""; //$NON-NLS-1$
 		return ArduinoPathInput.getText().trim();
 	}
 
 	public String getBoardType() {
 		if (BoardType == null)
-			return "";
+			return ""; //$NON-NLS-1$
 		return BoardType.getText().trim();
 	}
 
 	public String getFrequency() {
 		if (ProcessorFrequency == null)
-			return "";
+			return ""; //$NON-NLS-1$
 		return ProcessorFrequency.getText().trim();
 	}
 
 	public String getOptimizeSetting() {
 		if (Optimize == null)
-			return "";
+			return ""; //$NON-NLS-1$
 		return Optimize.getText().trim();
 	}
 
 	public String getProcessor() {
 		if (ProcessorCombo == null)
-			return "";
+			return ""; //$NON-NLS-1$
 		return ProcessorCombo.getText().trim();
 	}
 
 	public String getUploadBaud() {
 		if (UploadBaud == null)
-			return "";
+			return ""; //$NON-NLS-1$
 		return UploadBaud.getText().trim();
 	}
 
 	public String getUploadProtocall() {
 		if (UploadProtocall == null)
-			return "";
+			return ""; //$NON-NLS-1$
 		return UploadProtocall.getText().trim();
 	}
 
@@ -329,7 +329,7 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 		Optimize.setEnabled(e);
 		if (e)
 			setOptionsForBoard();
-		boolean f = e && getBoardType().equals("Custom");
+		boolean f = e && getBoardType().equals("Custom"); //$NON-NLS-1$
 		ProcessorCombo.setEnabled(f);
 		ProcessorFrequency.setEnabled(f);
 		UploadProtocall.setEnabled(f);
@@ -342,9 +342,9 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 		Map<String, Map<String, String>> m = t.getBoards();
 		for (String s : m.keySet()) {
 			if (s != null)
-				Boards.add(m.get(s).get("name"));
+				Boards.add(m.get(s).get("name")); //$NON-NLS-1$
 		}
-		Boards.add("Custom");
+		Boards.add("Custom"); //$NON-NLS-1$
 		String[] sBoards = new String[Boards.size()];
 		Boards.toArray(sBoards);
 		BoardType.setItems(sBoards);
@@ -358,22 +358,17 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 		String mapName = t.getBoardNamed(getBoardType());
 		Map<String, String> settings = t.getBoardSettings(mapName);
 		if (settings != null) {
-			ProcessorCombo.setText(settings.get("build.mcu"));
-			ProcessorFrequency.setText(settings.get("build.f_cpu"));
-			UploadBaud.setText(settings.get("upload.speed"));
-			UploadProtocall.setText(settings.get("upload.protocol"));
-			// uno.upload.protocol=stk500
-			// uno.upload.maximum_size=32256
-			// uno.upload.speed=115200
-			// uno.build.mcu=atmega328p
-			// uno.build.f_cpu=16000000L
+			ProcessorCombo.setText(settings.get(SettingKeys.ProcessorTypeKey));
+			ProcessorFrequency.setText(settings.get(SettingKeys.FrequencyKey));
+			UploadBaud.setText(settings.get(SettingKeys.UploadSpeedKey));
+			UploadProtocall.setText(settings.get(SettingKeys.UploadProtocolKey));
 
 		}
 	}
 
 	private void setWarnings() {
 		if (!arduinoPathIsValid())
-			setErrorMessage("Arduino Path is not valid");
+			setErrorMessage("Arduino Path is not valid"); //$NON-NLS-1$
 		setMessage(null);
 	}
 
@@ -390,9 +385,9 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 		if (!arduinoPathIsValid()) { // check arduino path is correct
 			valid = false;
 		}
-		if (getBoardType().equals("Custom")) {
-			valid = valid && getProcessor() != "" && getFrequency() != ""
-					&& getUploadProtocall() != "" && getUploadBaud() != "";
+		if (getBoardType().equals("Custom")) { //$NON-NLS-1$
+			valid = valid && getProcessor() != "" && getFrequency() != "" //$NON-NLS-1$ //$NON-NLS-2$
+					&& getUploadProtocall() != "" && getUploadBaud() != ""; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		setWarnings();
 		return valid;
@@ -402,7 +397,7 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 	 * @return true if arduino.exe is found in the arduino path textbox
 	 */
 	private boolean arduinoPathIsValid() {
-		File arduino = new File(ArduinoPathInput.getText(), "arduino.exe");
+		File arduino = new File(ArduinoPathInput.getText(), "arduino.exe"); //$NON-NLS-1$
 		return arduino.exists();
 	}
 

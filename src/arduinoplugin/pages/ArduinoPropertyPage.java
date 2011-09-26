@@ -45,13 +45,13 @@ public class ArduinoPropertyPage extends PropertyPage
 		{
 			//TODO get the project
 			IProject p = null;
-			SettingsManager.saveBothSetting("ArduinoPath",s.getArduinoPath(),p);
-			SettingsManager.saveBothSetting("BoardType",s.getBoardType(),p);
-			SettingsManager.saveBothSetting("Optimize",s.getOptimizeSetting(),p);
-			SettingsManager.saveBothSetting("Frequency",s.getFrequency(),p);
-			SettingsManager.saveBothSetting("MCU",s.getProcessor(),p);
-			SettingsManager.saveBothSetting("UploadProtocall",s.getUploadProtocall(),p);
-			SettingsManager.saveBothSetting("UploadBaud",s.getUploadBaud(),p);
+			SettingsManager.saveBothSetting(SettingKeys.ArduinoPathKey,s.getArduinoPath(),p);
+			SettingsManager.saveBothSetting(SettingKeys.BoardTypeKey,s.getBoardType(),p);
+			SettingsManager.saveBothSetting(SettingKeys.OptimizeKey,s.getOptimizeSetting(),p);
+			SettingsManager.saveBothSetting(SettingKeys.FrequencyKey,s.getFrequency(),p);
+			SettingsManager.saveBothSetting(SettingKeys.ProcessorTypeKey,s.getProcessor(),p);
+			SettingsManager.saveBothSetting(SettingKeys.UploadProtocolKey,s.getUploadProtocall(),p);
+			SettingsManager.saveBothSetting(SettingKeys.UploadSpeedKey,s.getUploadBaud(),p);
 		}
 		return isValid();
 	}

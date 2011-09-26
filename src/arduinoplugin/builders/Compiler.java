@@ -31,6 +31,7 @@ import org.eclipse.core.resources.IProject;
 import arduinoplugin.Preprocess.Sketch;
 import arduinoplugin.base.PluginBase;
 import arduinoplugin.base.SettingsManager;
+import arduinoplugin.pages.SettingKeys;
 
 public class Compiler implements MessageConsumer {
 
@@ -70,11 +71,11 @@ public class Compiler implements MessageConsumer {
 		this.verbose = verbose;
 
 		String avrBasePath = PluginBase.getAVRPath();
-		MCU = SettingsManager.getSetting("MCU",project);
-		F_CPU = SettingsManager.getSetting("Frequency",project);
+		MCU = SettingsManager.getSetting(SettingKeys.ProcessorTypeKey,project);
+		F_CPU = SettingsManager.getSetting(SettingKeys.FrequencyKey,project);
 		if (!boardSettingsFull()) {
 			RunnerException re = new RunnerException(
-					"No board selected; please choose a board from the Tools > Board menu.");
+					"No board selected; please choose a board from the Tools > Board menu."); //$NON-NLS-1$
 			re.hideStackTrace();
 			throw re;
 		}
@@ -91,16 +92,16 @@ public class Compiler implements MessageConsumer {
 			includePaths.add(file.getPath());
 		}
 
-		System.out.println("compile the sketch");
+		System.out.println("compile the sketch"); //$NON-NLS-1$
 		// 1. compile the sketch (already in the buildPath)
 		objectFiles.addAll(compileFiles(avrBasePath, buildPath, includePaths,
-				findFilesInPath(buildPath, "S", false),
-				findFilesInPath(buildPath, "c", false),
-				findFilesInPath(buildPath, "cpp", false)));
+				findFilesInPath(buildPath, "S", false), //$NON-NLS-1$
+				findFilesInPath(buildPath, "c", false), //$NON-NLS-1$
+				findFilesInPath(buildPath, "cpp", false))); //$NON-NLS-1$
 
 		// 2. compile the libraries, outputting .o files to:
 		// <buildPath>/<library>/
-		System.out.println("compile the libraries, outputting .o");
+		System.out.println("compile the libraries, outputting .o"); //$NON-NLS-1$
 		for (File libraryFolder : sketch.getImportedLibraries()) {
 			File outputFolder = new File(buildPath, libraryFolder.getName());
 			File utilityFolder = new File(libraryFolder, "utility");
@@ -109,37 +110,37 @@ public class Compiler implements MessageConsumer {
 			includePaths.add(utilityFolder.getAbsolutePath());
 			objectFiles.addAll(compileFiles(avrBasePath,
 					outputFolder.getAbsolutePath(), includePaths,
-					findFilesInFolder(libraryFolder, "S", false),
-					findFilesInFolder(libraryFolder, "c", false),
-					findFilesInFolder(libraryFolder, "cpp", false)));
+					findFilesInFolder(libraryFolder, "S", false), //$NON-NLS-1$
+					findFilesInFolder(libraryFolder, "c", false), //$NON-NLS-1$
+					findFilesInFolder(libraryFolder, "cpp", false))); //$NON-NLS-1$
 
-			outputFolder = new File(outputFolder, "utility");
+			outputFolder = new File(outputFolder, "utility"); //$NON-NLS-1$
 			createFolder(outputFolder);
 			objectFiles.addAll(compileFiles(avrBasePath,
 					outputFolder.getAbsolutePath(), includePaths,
-					findFilesInFolder(utilityFolder, "S", false),
-					findFilesInFolder(utilityFolder, "c", false),
-					findFilesInFolder(utilityFolder, "cpp", false)));
+					findFilesInFolder(utilityFolder, "S", false), //$NON-NLS-1$
+					findFilesInFolder(utilityFolder, "c", false), //$NON-NLS-1$
+					findFilesInFolder(utilityFolder, "cpp", false))); //$NON-NLS-1$
 			// other libraries should not see this library's utility/ folder
 			includePaths.remove(includePaths.size() - 1);
 		}
 
-		String runtimeLibraryName = buildPath + File.separator + "core.a";
+		String runtimeLibraryName = buildPath + File.separator + "core.a"; //$NON-NLS-1$
 		if(!(new File(runtimeLibraryName).exists()))
 		{
 			// 3. compile the core, outputting .o files to <buildPath> and then
 			// collecting them into the core.a library file.
-			System.out.println("Compile the core .o files");
+			System.out.println("Compile the core .o files"); //$NON-NLS-1$
 			includePaths.clear();
 			includePaths.add(corePath); // include path for core only
 			List<File> coreObjectFiles = compileFiles(avrBasePath, buildPath,
-					includePaths, findFilesInPath(corePath, "S", true),
-					findFilesInPath(corePath, "c", true),
-					findFilesInPath(corePath, "cpp", true));
+					includePaths, findFilesInPath(corePath, "S", true), //$NON-NLS-1$
+					findFilesInPath(corePath, "c", true), //$NON-NLS-1$
+					findFilesInPath(corePath, "cpp", true)); //$NON-NLS-1$
 
-			System.out.println("Link into the core.a stsic library");
+			System.out.println("Link into the core.a stsic library"); //$NON-NLS-1$
 			List<String> baseCommandAR = new ArrayList<String>(
-					Arrays.asList(new String[] { avrBasePath + "avr-ar", "rcs",
+					Arrays.asList(new String[] { avrBasePath + "avr-ar", "rcs", //$NON-NLS-1$ //$NON-NLS-2$
 							runtimeLibraryName }));
 			for (File file : coreObjectFiles) {
 				List<String> commandAR = new ArrayList<String>(baseCommandAR);
@@ -148,63 +149,63 @@ public class Compiler implements MessageConsumer {
 			}
 		}
 		else
-			System.out.println("core.a already exists");
+			System.out.println("core.a already exists"); //$NON-NLS-1$
 
 		// 4. link it all together into the .elf file
-		System.out.println("link into elf");
+		System.out.println("link into elf"); //$NON-NLS-1$
 		List<String> baseCommandLinker = new ArrayList<String>(
-				Arrays.asList(new String[] { avrBasePath + "avr-gcc", "-O"+SettingsManager.getSetting("Optimize",project),
-						"-Wl,--gc-sections", "-mmcu=" + MCU, "-o",
-						buildPath + File.separator + primaryClassName + ".elf" }));
+				Arrays.asList(new String[] { avrBasePath + "avr-gcc", "-O"+SettingsManager.getSetting(SettingKeys.OptimizeKey,project), //$NON-NLS-1$ //$NON-NLS-2$
+						"-Wl,--gc-sections", "-mmcu=" + MCU, "-o", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						buildPath + File.separator + primaryClassName + ".elf" })); //$NON-NLS-1$
 
 		for (File file : objectFiles) {
 			baseCommandLinker.add(file.getAbsolutePath());
 		}
 
 		baseCommandLinker.add(runtimeLibraryName);
-		baseCommandLinker.add("-L" + buildPath);
-		baseCommandLinker.add("-lm");
+		baseCommandLinker.add("-L" + buildPath); //$NON-NLS-1$
+		baseCommandLinker.add("-lm"); //$NON-NLS-1$
 
 		execAsynchronously(baseCommandLinker);
 
 		List<String> baseCommandObjcopy = new ArrayList<String>(
-				Arrays.asList(new String[] { avrBasePath + "avr-objcopy", "-O",
-						"-R", }));
+				Arrays.asList(new String[] { avrBasePath + "avr-objcopy", "-O", //$NON-NLS-1$ //$NON-NLS-2$
+						"-R", })); //$NON-NLS-1$
 
 		List<String> commandObjcopy;
 
 		// 5. extract EEPROM data (from EEMEM directive) to .eep file.
-		System.out.println("Extract EEPROM to .eep");
+		System.out.println("Extract EEPROM to .eep"); //$NON-NLS-1$
 		commandObjcopy = new ArrayList<String>(baseCommandObjcopy);
-		commandObjcopy.add(2, "ihex");
-		commandObjcopy.set(3, "-j");
-		commandObjcopy.add(".eeprom");
-		commandObjcopy.add("--set-section-flags=.eeprom=alloc,load");
-		commandObjcopy.add("--no-change-warnings");
-		commandObjcopy.add("--change-section-lma");
-		commandObjcopy.add(".eeprom=0");
+		commandObjcopy.add(2, "ihex"); //$NON-NLS-1$
+		commandObjcopy.set(3, "-j"); //$NON-NLS-1$
+		commandObjcopy.add(".eeprom"); //$NON-NLS-1$
+		commandObjcopy.add("--set-section-flags=.eeprom=alloc,load"); //$NON-NLS-1$
+		commandObjcopy.add("--no-change-warnings"); //$NON-NLS-1$
+		commandObjcopy.add("--change-section-lma"); //$NON-NLS-1$
+		commandObjcopy.add(".eeprom=0"); //$NON-NLS-1$
 		commandObjcopy.add(buildPath + File.separator + primaryClassName
-				+ ".elf");
+				+ ".elf"); //$NON-NLS-1$
 		commandObjcopy.add(buildPath + File.separator + primaryClassName
-				+ ".eep");
+				+ ".eep"); //$NON-NLS-1$
 		execAsynchronously(commandObjcopy);
 
 		// 6. build the .hex file
-		System.out.println("Build the Hex file");
+		System.out.println("Build the Hex file"); //$NON-NLS-1$
 		commandObjcopy = new ArrayList<String>(baseCommandObjcopy);
-		commandObjcopy.add(2, "ihex");
-		commandObjcopy.add(".eeprom"); // remove eeprom data
+		commandObjcopy.add(2, "ihex"); //$NON-NLS-1$
+		commandObjcopy.add(".eeprom"); // remove eeprom data //$NON-NLS-1$
 		commandObjcopy.add(buildPath + File.separator + primaryClassName
-				+ ".elf");
+				+ ".elf"); //$NON-NLS-1$
 		commandObjcopy.add(buildPath + File.separator + primaryClassName
-				+ ".hex");
+				+ ".hex"); //$NON-NLS-1$
 		execAsynchronously(commandObjcopy);
 
 		return true;
 	}
 
 	private boolean boardSettingsFull() {
-		if (MCU != null && MCU != "" && F_CPU != null && F_CPU != "")
+		if (MCU != null && MCU != "" && F_CPU != null && F_CPU != "") //$NON-NLS-1$ //$NON-NLS-2$
 			return true;
 		return false;
 	}
@@ -217,7 +218,7 @@ public class Compiler implements MessageConsumer {
 
 		for (File file : sSources) {
 			String objectPath = buildPath + File.separator + file.getName()
-					+ ".o";
+					+ ".o"; //$NON-NLS-1$
 			objectPaths.add(new File(objectPath));
 			execAsynchronously(getCommandCompilerS(avrBasePath, includePaths,
 					file.getAbsolutePath(), objectPath));
@@ -225,7 +226,7 @@ public class Compiler implements MessageConsumer {
 
 		for (File file : cSources) {
 			String objectPath = buildPath + File.separator + file.getName()
-					+ ".o";
+					+ ".o"; //$NON-NLS-1$
 			objectPaths.add(new File(objectPath));
 			execAsynchronously(getCommandCompilerC(avrBasePath, includePaths,
 					file.getAbsolutePath(), objectPath));
@@ -233,7 +234,7 @@ public class Compiler implements MessageConsumer {
 
 		for (File file : cppSources) {
 			String objectPath = buildPath + File.separator + file.getName()
-					+ ".o";
+					+ ".o"; //$NON-NLS-1$
 			objectPaths.add(new File(objectPath));
 			execAsynchronously(getCommandCompilerCPP(avrBasePath, includePaths,
 					file.getAbsolutePath(), objectPath));
@@ -256,7 +257,7 @@ public class Compiler implements MessageConsumer {
 
 		if (verbose) {
 			for (int j = 0; j < command.length; j++) {
-				System.out.print(command[j] + " ");
+				System.out.print(command[j] + " "); //$NON-NLS-1$
 			}
 			System.out.println();
 		}
@@ -305,11 +306,11 @@ public class Compiler implements MessageConsumer {
 
 		if (result > 1) {
 			// a failure in the tool (e.g. unable to locate a sub-executable)
-			System.err.println(command[0] + " returned " + result);
+			System.err.println(command[0] + " returned " + result); //$NON-NLS-1$
 		}
 
 		if (result != 0) {
-			RunnerException re = new RunnerException("Error compiling.");
+			RunnerException re = new RunnerException("Error compiling."); //$NON-NLS-1$
 			re.hideStackTrace();
 			throw re;
 		}
@@ -377,19 +378,19 @@ public class Compiler implements MessageConsumer {
 			List<String> includePaths, String sourceName, String objectName) {
 		List<String> baseCommandCompiler = new ArrayList<String>(
 				Arrays.asList(new String[] {
-						avrBasePath + "avr-gcc",
-						"-c", // compile, don't link
-						"-g", // include debugging info (so errors include line
+						avrBasePath + "avr-gcc", //$NON-NLS-1$
+						"-c", // compile, don't link //$NON-NLS-1$
+						"-g", // include debugging info (so errors include line //$NON-NLS-1$
 						// numbers)
-						"-assembler-with-cpp", "-mmcu=" + MCU,
-						"-DF_CPU=" + F_CPU, }));
+						"-assembler-with-cpp", "-mmcu=" + MCU, //$NON-NLS-1$ //$NON-NLS-2$
+						"-DF_CPU=" + F_CPU, })); //$NON-NLS-1$
 
 		for (int i = 0; i < includePaths.size(); i++) {
-			baseCommandCompiler.add("-I" + (String) includePaths.get(i));
+			baseCommandCompiler.add("-I" + (String) includePaths.get(i)); //$NON-NLS-1$
 		}
 
 		baseCommandCompiler.add(sourceName);
-		baseCommandCompiler.add("-o" + objectName);
+		baseCommandCompiler.add("-o" + objectName); //$NON-NLS-1$
 
 		return baseCommandCompiler;
 	}
@@ -398,23 +399,23 @@ public class Compiler implements MessageConsumer {
 			List<String> includePaths, String sourceName, String objectName) {
 
 		List<String> baseCommandCompiler = new ArrayList<String>(
-				Arrays.asList(new String[] { avrBasePath + "avr-gcc", "-c", // compile,
+				Arrays.asList(new String[] { avrBasePath + "avr-gcc", "-c", // compile, //$NON-NLS-1$ //$NON-NLS-2$
 						// don't
 						// link
-						"-g", // include debugging info (so errors include line
+						"-g", // include debugging info (so errors include line //$NON-NLS-1$
 						// numbers)
-						"-O" + SettingsManager.getSetting("Optimize",statProject), // optimize for size
+						"-O" + SettingsManager.getSetting(SettingKeys.OptimizeKey,statProject), // optimize for size //$NON-NLS-1$
 						"-w", // surpress all warnings
-						"-ffunction-sections", // place each function in its own
+						"-ffunction-sections", // place each function in its own //$NON-NLS-1$
 						// section
-						"-fdata-sections", "-mmcu=" + MCU, "-DF_CPU=" + F_CPU, }));
+						"-fdata-sections", "-mmcu=" + MCU, "-DF_CPU=" + F_CPU, })); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 		for (int i = 0; i < includePaths.size(); i++) {
-			baseCommandCompiler.add("-I" + (String) includePaths.get(i));
+			baseCommandCompiler.add("-I" + (String) includePaths.get(i)); //$NON-NLS-1$
 		}
 
 		baseCommandCompiler.add(sourceName);
-		baseCommandCompiler.add("-o" + objectName);
+		baseCommandCompiler.add("-o" + objectName); //$NON-NLS-1$
 
 		return baseCommandCompiler;
 	}
@@ -423,26 +424,26 @@ public class Compiler implements MessageConsumer {
 			List<String> includePaths, String sourceName, String objectName) {
 
 		List<String> baseCommandCompilerCPP = new ArrayList<String>(
-				Arrays.asList(new String[] { avrBasePath + "avr-g++", "-c", // compile,
+				Arrays.asList(new String[] { avrBasePath + "avr-g++", "-c", // compile, //$NON-NLS-1$ //$NON-NLS-2$
 						// don't
 						// link
-						"-g", // include debugging info (so errors include line
+						"-g", // include debugging info (so errors include line //$NON-NLS-1$
 						// numbers)
-						"-O" + SettingsManager.getSetting("Optimize",statProject), // optimize for size
-						"-w", // surpress all warnings
-						"-fno-exceptions", "-ffunction-sections", // place each
+						"-O" + SettingsManager.getSetting(SettingKeys.OptimizeKey,statProject), // optimize for size //$NON-NLS-1$
+						"-w", // surpress all warnings //$NON-NLS-1$
+						"-fno-exceptions", "-ffunction-sections", // place each //$NON-NLS-1$ //$NON-NLS-2$
 						// function
 						// in its
 						// own
 						// section
-						"-fdata-sections", "-mmcu=" + MCU, "-DF_CPU=" + F_CPU, }));
+						"-fdata-sections", "-mmcu=" + MCU, "-DF_CPU=" + F_CPU, })); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 		for (int i = 0; i < includePaths.size(); i++) {
-			baseCommandCompilerCPP.add("-I" + (String) includePaths.get(i));
+			baseCommandCompilerCPP.add("-I" + (String) includePaths.get(i)); //$NON-NLS-1$
 		}
 
 		baseCommandCompilerCPP.add(sourceName);
-		baseCommandCompilerCPP.add("-o" + objectName);
+		baseCommandCompilerCPP.add("-o" + objectName); //$NON-NLS-1$
 
 		return baseCommandCompilerCPP;
 	}
@@ -453,7 +454,7 @@ public class Compiler implements MessageConsumer {
 		if (folder.isDirectory())
 			return;
 		if (!folder.mkdir())
-			throw new RunnerException("Couldn't create: " + folder);
+			throw new RunnerException("Couldn't create: " + folder); //$NON-NLS-1$
 	}
 
 	/**
@@ -465,7 +466,7 @@ public class Compiler implements MessageConsumer {
 		FilenameFilter onlyHFiles = new FilenameFilter() {
 			@Override
 			public boolean accept(File dir, String name) {
-				return name.endsWith(".h");
+				return name.endsWith(".h"); //$NON-NLS-1$
 			}
 		};
 
@@ -485,10 +486,10 @@ public class Compiler implements MessageConsumer {
 			return files;
 
 		for (File file : folder.listFiles()) {
-			if (file.getName().startsWith("."))
+			if (file.getName().startsWith(".")) //$NON-NLS-1$
 				continue; // skip hidden files
 
-			if (file.getName().endsWith("." + extension))
+			if (file.getName().endsWith("." + extension)) //$NON-NLS-1$
 				files.add(file);
 
 			if (recurse && file.isDirectory()) {

@@ -35,6 +35,7 @@ import arduinoplugin.base.SettingsManager;
 import arduinoplugin.builders.RunnerException;
 import arduinoplugin.builders.Compiler;
 import arduinoplugin.builders.Sizer;
+import arduinoplugin.pages.SettingKeys;
 import arduinoplugin.uploader.AvrdudeUploader;
 import arduinoplugin.uploader.SerialException;
 import arduinoplugin.uploader.Uploader;
@@ -134,7 +135,7 @@ public class Sketch {
 			// with the ._ prefix on Mac OS X. (You'll see this with Mac files
 			// on
 			// non-HFS drives, i.e. a thumb drive formatted FAT32.)
-			if (filename.startsWith("."))
+			if (filename.startsWith(".")) //$NON-NLS-1$
 				continue;
 
 			// Don't let some wacko name a directory blah.pde or bling.java.
@@ -145,7 +146,7 @@ public class Sketch {
 			String base = filename;
 			// now strip off the .pde and .java extensions
 			for (String extension : extensions) {
-				if (base.toLowerCase().endsWith("." + extension)) {
+				if (base.toLowerCase().endsWith("." + extension)) { //$NON-NLS-1$
 					base = base.substring(0,
 							base.length() - (extension.length() + 1));
 
@@ -261,7 +262,7 @@ public class Sketch {
 					buildPath, name, codeFolderPackages);
 		} catch (FileNotFoundException fnfe) {
 			fnfe.printStackTrace();
-			String msg = "Build folder disappeared or could not be written";
+			String msg = "Build folder disappeared or could not be written"; //$NON-NLS-1$
 			throw new RunnerException(msg);
 		}
 
@@ -276,7 +277,7 @@ public class Sketch {
 			String className = preprocessor.write();
 
 			if (className == null) {
-				throw new RunnerException("Could not find main class");
+				throw new RunnerException("Could not find main class"); //$NON-NLS-1$
 				// this situation might be perfectly fine,
 				// (i.e. if the file is empty)
 				// System.out.println("No class found in " + code[i].name);
@@ -288,11 +289,11 @@ public class Sketch {
 			}
 
 			// store this for the compiler and the runtime
-			primaryClassName = className + ".cpp";
+			primaryClassName = className + ".cpp"; //$NON-NLS-1$
 
 		} catch (FileNotFoundException fnfe) {
 			fnfe.printStackTrace();
-			String msg = "Build folder disappeared or could not be written";
+			String msg = "Build folder disappeared or could not be written"; //$NON-NLS-1$
 			throw new RunnerException(msg);
 		} catch (RunnerException pe) {
 			// RunnerExceptions are caught here and re-thrown, so that they
@@ -302,7 +303,7 @@ public class Sketch {
 
 		} catch (Exception ex) {
 			// XXX better method for handling this?
-			System.err.println("Uncaught exception type:" + ex.getClass());
+			System.err.println("Uncaught exception type:" + ex.getClass()); //$NON-NLS-1$
 			ex.printStackTrace();
 			throw new RunnerException(ex.toString());
 		}
@@ -321,9 +322,9 @@ public class Sketch {
 		// 3. then loop over the code[] and save each .java file
 
 		for (File sc : code) {
-			if (getExtensionOfFile(sc).equals("c")
-					|| getExtensionOfFile(sc).equals("cpp")
-					|| getExtensionOfFile(sc).equals("h")) {
+			if (getExtensionOfFile(sc).equals("c") //$NON-NLS-1$
+					|| getExtensionOfFile(sc).equals("cpp") //$NON-NLS-1$
+					|| getExtensionOfFile(sc).equals("h")) { //$NON-NLS-1$
 				// no pre-processing services necessary for java files
 				// just write the the contents of 'program' to a .java file
 				// into the build directory. uses byte stream and reader/writer
@@ -333,12 +334,12 @@ public class Sketch {
 					copyFile(sc, new File(buildPath,filename));
 				} catch (IOException e) {
 					e.printStackTrace();
-					throw new RunnerException("Problem moving " + filename
-							+ " to the build folder");
+					throw new RunnerException("Problem moving " + filename //$NON-NLS-1$
+							+ " to the build folder"); //$NON-NLS-1$
 				}
 				// TODO sc.setPreprocName(filename);
 
-			} else if (getExtensionOfFile(sc).equals("pde")) {
+			} else if (getExtensionOfFile(sc).equals("pde")) { //$NON-NLS-1$
 				// The compiler and runner will need this to have a proper
 				// offset
 				// TODO sc.addPreprocOffset(headerOffset);
@@ -375,7 +376,7 @@ public class Sketch {
 		BufferedReader reader = new BufferedReader(new FileReader(sc));
 		String line = null;
 		StringBuilder stringBuilder = new StringBuilder();
-		String ls = System.getProperty("line.separator");
+		String ls = System.getProperty("line.separator"); //$NON-NLS-1$
 		while ((line = reader.readLine()) != null) {
 			stringBuilder.append(line);
 			stringBuilder.append(ls);
@@ -389,7 +390,7 @@ public class Sketch {
 		String path = f.getName();
 		int i = path.lastIndexOf('.');
 		if (i == -1)// no extension
-			return "";
+			return ""; //$NON-NLS-1$
 		// returns the extension without the .
 		path = path.substring(i + 1, path.length());
 		return path;
@@ -476,7 +477,7 @@ public class Sketch {
 		// compile the program. errors will happen as a RunnerException
 		// that will bubble up to whomever called build().
 		Compiler compiler = new Compiler(project);
-		System.out.println("calling compiler");
+		System.out.println("calling compiler"); //$NON-NLS-1$
 		if (compiler.compile(this, buildPath, primaryClassName, verbose)) {
 			size(buildPath, primaryClassName);
 			return primaryClassName;
@@ -489,23 +490,23 @@ public class Sketch {
 		long size = 0;
 		// TODO get the max size for the different boards
 		//have to first save the max size to the settings
-		String maxsizeString = SettingsManager.getSetting("upload.maximum_size", project);
+		String maxsizeString = SettingsManager.getSetting(SettingKeys.uploadMaxSizeKey, project);
 		if (maxsizeString == null)
 			return;
 		long maxsize = Integer.parseInt(maxsizeString);
 		Sizer sizer = new Sizer(buildPath, suggestedClassName);
 		try {
 			size = sizer.computeSize();
-			System.out.println("Binary sketch size: " + size + " bytes (of a "
-					+ maxsize + " byte maximum)");
+			System.out.println("Binary sketch size: " + size + " bytes (of a " //$NON-NLS-1$ //$NON-NLS-2$
+					+ maxsize + " byte maximum)"); //$NON-NLS-1$
 		} catch (RunnerException e) {
-			System.err.println("Couldn't determine program size: "
+			System.err.println("Couldn't determine program size: " //$NON-NLS-1$
 					+ e.getMessage());
 		}
 
 		if (size > maxsize)
 			throw new RunnerException(
-					"Sketch too big; see http://www.arduino.cc/en/Guide/Troubleshooting#size for tips on reducing it.");
+					"Sketch too big; see http://www.arduino.cc/en/Guide/Troubleshooting#size for tips on reducing it."); //$NON-NLS-1$
 	}
 
 	/*
@@ -560,8 +561,8 @@ public class Sketch {
 				}
 				if (!endOfRainbow) {
 					throw new RuntimeException(
-							"Missing the */ from the end of a "
-									+ "/* comment */");
+							"Missing the */ from the end of a " //$NON-NLS-1$
+									+ "/* comment */"); //$NON-NLS-1$
 				}
 			} else { // any old character, move along
 				index++;
@@ -574,14 +575,14 @@ public class Sketch {
 	 * Returns the default extension for this editor setup.
 	 */
 	public String getDefaultExtension() {
-		return "pde";
+		return "pde"; //$NON-NLS-1$
 	}
 
 	/**
 	 * Returns a String[] array of proper extensions.
 	 */
 	public String[] getExtensions() {
-		return new String[] { "pde", "c", "cpp", "h" };
+		return new String[] { "pde", "c", "cpp", "h" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	}
 
 	/**
@@ -642,8 +643,8 @@ public class Sketch {
 			    // download the program
 			    //
 			    uploader = new AvrdudeUploader();
-			    suggestedClassName = suggestedClassName.substring(0, suggestedClassName.indexOf(".pde"));
-			    suggestedClassName = suggestedClassName +".cpp";
+			    suggestedClassName = suggestedClassName.substring(0, suggestedClassName.indexOf(".pde")); //$NON-NLS-1$
+			    suggestedClassName = suggestedClassName +".cpp"; //$NON-NLS-1$
 			    boolean success = uploader.uploadUsingPreferences(buildPath,
 			                                                      suggestedClassName,
 			                                                      verbose,proj);
