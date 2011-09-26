@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.CoreException;
 import arduinoplugin.Preprocess.Sketch;
 import arduinoplugin.builders.RunnerException;
 import arduinoplugin.natures.ArduinoProjectNature;
+import arduinoplugin.uploader.Serial;
 import arduinoplugin.uploader.SerialException;
 
 public class DropDownHandler extends AbstractHandler {
@@ -27,6 +28,10 @@ public class DropDownHandler extends AbstractHandler {
     } 
     else if(msg.equals("UploadCommand"))
     {
+    	for(String i : Serial.list())
+    	{
+    		System.out.print(i+"\n");
+    	}
     	IProject projectToUpload;
 		projectToUpload = selectProject();
     	String primaryClass = projectToUpload.getName()+".pde";
