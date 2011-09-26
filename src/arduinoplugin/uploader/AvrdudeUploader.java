@@ -87,7 +87,6 @@ public class AvrdudeUploader extends Uploader {
 
 	private boolean uploadViaBootloader(String buildPath, String className, IProject thisProj)
 			throws RunnerException, SerialException {
-		// TODO actual project not null get the target
 		Target target = new Target(new File(PluginBase.getBoardProgPath()));
 		String mapName = target.getBoardNamed(SettingsManager.getSetting(SettingKeys.BoardTypeKey, thisProj));
 		Map<String, String> boardPreferences = target.getBoardSettings(mapName);
@@ -110,7 +109,7 @@ public class AvrdudeUploader extends Uploader {
 			protocol = "stk500v1"; //$NON-NLS-1$
 		commandDownloader.add("-c" + protocol); //$NON-NLS-1$
 		commandDownloader.add(
-		// TODO get actual project?
+
 				"-P" + (PluginBase.isWindows() ? "\\\\.\\" : "")+"COM3"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 						//+ SettingsManager.getSetting("serial.port", thisProj));
 		commandDownloader.add("-b" //$NON-NLS-1$
@@ -309,7 +308,6 @@ public class AvrdudeUploader extends Uploader {
 			commandDownloader.add("-q"); //$NON-NLS-1$
 			commandDownloader.add("-q"); //$NON-NLS-1$
 		}
-		// TODO get actual project not null
 		commandDownloader.add("-p" + SettingsManager.getSetting(SettingKeys.ProcessorTypeKey, thisProj)); //$NON-NLS-1$
 		commandDownloader.addAll(params);
 

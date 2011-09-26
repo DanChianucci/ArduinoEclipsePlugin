@@ -16,9 +16,6 @@ public class PartitionScanner extends RuleBasedPartitionScanner {
 		IToken preprocessor = new Token(PREPROC);
 
 		IPredicateRule[] rules = new IPredicateRule[2];
-
-		//TODO Multiline comments should turn color when the 
-		//opening sequence is detected... not when both are detected.
 		rules[0] = new PatternRule("/*", "*/", comment, '\0', false, true);
 		rules[1] = new SingleLineRule("#",null,preprocessor);//new TagRule(preprocessor);
 

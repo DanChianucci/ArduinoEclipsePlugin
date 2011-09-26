@@ -40,10 +40,8 @@ public class DropDownHandler extends AbstractHandler {
 			Sketch s = new Sketch();
 			s.upload(buildPath, primaryClass, true, projectToUpload);
 		} catch (RunnerException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SerialException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}    	
     }
@@ -60,7 +58,6 @@ public class DropDownHandler extends AbstractHandler {
 		  try {
 			if(p.hasNature(ArduinoProjectNature.NATURE_ID));
 		} catch (CoreException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		  	arduinoProjects.add(p);

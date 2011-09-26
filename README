@@ -32,7 +32,7 @@ Eventule Features include:
 	Arduino Builder						-Completed
 	Editor for pde files				-Started (just have to add keyword highlighting)
 	Saved preferences					-Completed
-	Uploader							-Started (need to add support to find com port)
+	Uploader							-Can Upload project to COM3
 
 	
 New Arduino Project Wizard:

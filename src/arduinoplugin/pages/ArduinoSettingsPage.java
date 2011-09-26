@@ -104,7 +104,6 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 		// *********************************
 		// **********************************************************************************
 		new Label(composite, SWT.NONE).setText("Arduino Location"); //$NON-NLS-1$
-		// TODO Find ArdEnv automatically
 		ArduinoPathInput = new Text(composite, SWT.BORDER);
 		String a = SettingsManager.getSetting("ArduinoPath", null);
 		if (a != null)
@@ -169,7 +168,7 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 		gd.grabExcessHorizontalSpace = true;
 		ProcessorCombo.setLayoutData(gd);
 		Processors = PluginBase.getProcessorArray();
-		ProcessorCombo.setItems(Processors);// TODO Make better list
+		ProcessorCombo.setItems(Processors);
 		ProcessorCombo.addListener(SWT.Selection, fieldModifyListener);
 		ProcessorCombo.setEnabled(false);
 
@@ -200,7 +199,6 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 		gd.horizontalAlignment = SWT.FILL;
 		UploadProtocall.setLayoutData(gd);
 		String Protocalls[] = { "stk500", "stk500v2" }; //$NON-NLS-1$ //$NON-NLS-2$
-		// TODO set actual protocalls
 		UploadProtocall.setItems(Protocalls);
 		UploadProtocall.addListener(SWT.Selection, fieldModifyListener);
 		UploadProtocall.setEnabled(false);
@@ -213,8 +211,8 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 		gd = new GridData();
 		gd.horizontalAlignment = SWT.FILL;
 		UploadBaud.setLayoutData(gd);
-		String Bauds[] = { "57600", "19200", "115200" };// TODO Set actual //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-														// usable bauds
+		String Bauds[] = { "57600", "19200", "115200" };//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+														
 		UploadBaud.setItems(Bauds);
 
 		UploadBaud.addListener(SWT.Selection, fieldModifyListener);
@@ -244,12 +242,11 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 					String lastBaud = SettingsManager.getSetting(SettingKeys.UploadSpeedKey,
 							null);
 					if (lastBaud != null)
-						UploadBaud.setText(lastBaud);// TODO set to whatever was
-														// used last time;
+						UploadBaud.setText(lastBaud);
 				}
 				String opt = SettingsManager.getSetting("Optimize", null); //$NON-NLS-1$
 				if (opt != null)
-					Optimize.setText(opt);// TODO set to whatever is settings
+					Optimize.setText(opt);
 
 			}
 		}

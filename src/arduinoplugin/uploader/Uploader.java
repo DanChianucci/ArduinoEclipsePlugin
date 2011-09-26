@@ -120,7 +120,6 @@ public abstract class Uploader implements MessageConsumer  {
       }
       
       commandArray[0] = avrBasePath + commandArray[0];
-      //TODO add actual project instead of null
       if (verbose || SettingsManager.getSetting(SettingKeys.uploadVerboseKey,null)=="true") { //$NON-NLS-2$
         for(int i = 0; i < commandArray.length; i++) {
           System.out.print(commandArray[i] + " "); //$NON-NLS-1$
