@@ -60,7 +60,7 @@ public class AvrdudeUploader extends Uploader {
 		} 
 		else
 		{
-			System.out.print("UPLOAD USING BOOTLOADER IS THE ONLY SUPPORTED UPOLOAD METHOD");
+			System.out.print("UPLOAD USING BOOTLOADER IS THE ONLY SUPPORTED UPLOAD METHOD");
 			return false;
 //		 Target t;
 //		
@@ -87,8 +87,9 @@ public class AvrdudeUploader extends Uploader {
 	private boolean uploadViaBootloader(String buildPath, String className, IProject thisProj)
 			throws RunnerException, SerialException {
 		// TODO actual project not null get the target
-		Target target = new Target(new File(thisProj.getLocation().toOSString()));
-		Map<String, String> boardPreferences = target.getBoardSettings(SettingsManager.getSetting("BoardType", thisProj));
+		Target target = new Target(new File(PluginBase.getBoardProgPath()));
+		String mapName = target.getBoardNamed(SettingsManager.getSetting("BoardType", thisProj));
+		Map<String, String> boardPreferences = target.getBoardSettings(mapName);
 		List<String> commandDownloader = new ArrayList<String>();
 		
 		if(SettingsManager.getSetting("BoardType",thisProj).equals("Custom"))
@@ -96,7 +97,7 @@ public class AvrdudeUploader extends Uploader {
 			boardPreferences = new LinkedHashMap<String,String>();
 			boardPreferences.put("upload.protocol", SettingsManager.getSetting("UploadProtocall", thisProj));
 			boardPreferences.put("upload.speed", SettingsManager.getSetting("UploadBaud", thisProj));
-			boardPreferences.put("upload.disable_flushing", SettingsManager.getSetting("flushing", thisProj));
+			boardPreferences.put("upload.disable_flushing",SettingsManager.getSetting("flushing", thisProj));
 		}
 			
 			
@@ -294,7 +295,7 @@ public class AvrdudeUploader extends Uploader {
 					+ "/tools/avrdude.conf");
 		} else {
 			commandDownloader.add("-C" + PluginBase.getHardwarePath()
-					+ "/tools/avr/etc/avrdude.conf");
+					+ "tools"+File.separator+"avr"+File.separator+"etc"+File.separator+"avrdude.conf");
 		}
 
 		if (verbose
@@ -308,7 +309,7 @@ public class AvrdudeUploader extends Uploader {
 			commandDownloader.add("-q");
 		}
 		// TODO get actual project not null
-		commandDownloader.add("-p" + SettingsManager.getSetting("mcu", thisProj));
+		commandDownloader.add("-p" + SettingsManager.getSetting("MCU", thisProj));
 		commandDownloader.addAll(params);
 
 		return executeUploadCommand(commandDownloader);
