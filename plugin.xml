@@ -12,6 +12,7 @@
             class="arduinoplugin.wizards.NewProjectWizard"
             finalPerspective="org.eclipse.cdt.ui.CPerspective"
             hasPages="true"
+            icon="icons/arduino.gif"
             id="ArduinoPlugin.newProjectWizard"
             name="Arduino"
             project="true">
