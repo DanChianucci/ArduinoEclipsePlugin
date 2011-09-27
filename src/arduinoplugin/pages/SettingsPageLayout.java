@@ -236,25 +236,28 @@ public class SettingsPageLayout{
 		// check that a is the correct arduino path
 		pathModifyListener.handleEvent(new Event());
 		if (arduinoPathIsValid()) {// if it is the correct path
-			String lastBoard = SettingsManager
-					.getSetting(SettingKeys.BoardTypeKey, null);
+			String lastBoard = SettingsManager.getSetting(SettingKeys.BoardTypeKey, null);
 			if (lastBoard != null)
+			{
 				BoardType.setText(lastBoard);
-			if (lastBoard != null && lastBoard.equals("Custom")) {
-				String lastProc = SettingsManager.getSetting(SettingKeys.ProcessorTypeKey, null);
-				ProcessorCombo.setText(lastProc);
-				String lastFreq = SettingsManager.getSetting(SettingKeys.FrequencyKey,
-						null);
-				if (lastFreq != null)
-					ProcessorFrequency.setText(lastFreq);
-				String lastProt = SettingsManager.getSetting(
-						SettingKeys.UploadProtocolKey, null);
-				if (lastProt != null)
-					UploadProtocall.setText(lastProt);
-				String lastBaud = SettingsManager.getSetting(SettingKeys.UploadSpeedKey,
-						null);
-				if (lastBaud != null)
-					UploadBaud.setText(lastBaud);
+				if (lastBoard.equals("Custom")) {
+					String lastProc = SettingsManager.getSetting(SettingKeys.ProcessorTypeKey, null);
+					ProcessorCombo.setText(lastProc);
+					String lastFreq = SettingsManager.getSetting(SettingKeys.FrequencyKey,
+							null);
+					if (lastFreq != null)
+						ProcessorFrequency.setText(lastFreq);
+					String lastProt = SettingsManager.getSetting(
+							SettingKeys.UploadProtocolKey, null);
+					if (lastProt != null)
+						UploadProtocall.setText(lastProt);
+					String lastBaud = SettingsManager.getSetting(SettingKeys.UploadSpeedKey,
+							null);
+					if (lastBaud != null)
+						UploadBaud.setText(lastBaud);
+				}
+				else
+					setOptionsForBoard();
 			}
 			String opt = SettingsManager.getSetting(SettingKeys.OptimizeKey, null);
 			if (opt != null)
@@ -360,7 +363,8 @@ public class SettingsPageLayout{
 	/**
 	 * Sets the uneditable items for a given board automatically
 	 */
-	private void setOptionsForBoard() {
+	private void setOptionsForBoard() 
+	{
 		Target t = new Target(new File(boardtxtPath));
 		String mapName = t.getBoardNamed(getBoardType());
 		Map<String, String> settings = t.getBoardSettings(mapName);
@@ -387,14 +391,9 @@ public class SettingsPageLayout{
 	 * @return true if the page is valid, and false otherwise
 	 */
 	private boolean validatePage() {
-		boolean valid = true;
-		if (!arduinoPathIsValid()) { // check arduino path is correct
-			valid = false;
-		}
-		if (getBoardType().equals("Custom")) { //$NON-NLS-1$
-			valid = valid && getProcessor() != "" && getFrequency() != "" //$NON-NLS-1$ //$NON-NLS-2$
-					&& getUploadProtocall() != "" && getUploadBaud() != ""; //$NON-NLS-1$ //$NON-NLS-2$
-		}
+
+			boolean valid = arduinoPathIsValid() && !getBoardType().equals("") && !getProcessor().equals("") && !getFrequency().equals("")
+					&& !getUploadProtocall().equals("") && !getUploadBaud().equals("");
 		//setWarnings();
 		cb.setText(valid ? "true":"false");
 
@@ -402,6 +401,7 @@ public class SettingsPageLayout{
 	}
 
 	/**
+	 * TODO arduino.exe is windows only...change to check for something else
 	 * @return true if arduino.exe is found in the arduino path textbox
 	 */
 	private boolean arduinoPathIsValid() {

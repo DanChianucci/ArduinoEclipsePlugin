@@ -33,9 +33,12 @@ public class DropDownHandler extends AbstractHandler {
     		System.out.print(i+"\n");
     	}
     	IProject projectToUpload;
+    	//TODO select the project to upload
 		projectToUpload = selectProject();
+		
     	String primaryClass = projectToUpload.getName()+".pde";
     	String buildPath = projectToUpload.getLocation().toOSString()+File.separator+"bin";
+    	
     	try {
 			Sketch s = new Sketch();
 			s.upload(buildPath, primaryClass, true, projectToUpload);
