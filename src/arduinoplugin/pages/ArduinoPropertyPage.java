@@ -2,14 +2,14 @@ package arduinoplugin.pages;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.dialogs.PropertyPage;
 
 import arduinoplugin.base.SettingsManager;
 
-//TODO Doesn't actually save settings, nore does it do any error checking... I would like to make this more 
-//integrated with the settings page so as not to have so much copied code
+//TODO Doesn't actually save settings, nore does it do any error checking... 
 
 public class ArduinoPropertyPage extends PropertyPage
 {
@@ -72,7 +72,8 @@ public class ArduinoPropertyPage extends PropertyPage
 	@Override
 	protected Control createContents(Composite parent) 
 	{
-		s.draw(parent);
+		Composite composite = new Composite(parent, SWT.NULL);
+		s.draw(composite);
 		setControl(parent);
 		Dialog.applyDialogFont(parent);	
 		Control c = parent;

@@ -1,5 +1,4 @@
 package arduinoplugin.pages;
-
 import java.io.File;
 import java.util.HashSet;
 import java.util.Map;
@@ -37,13 +36,14 @@ public class SettingsPageLayout{
 	private Text ProcessorFrequency;
 	private Combo UploadProtocall;
 	private Combo UploadBaud;
+	public Text cb; // so other classes can listen if complete or not
 
 	private String ArduinoPath;
 	private String boardtxtPath;
 	private Set<String> Boards = new HashSet<String>();
 	private String[] Processors;
 
-	private boolean validAndComplete;
+	public boolean validAndComplete;
 	
 	
 	SettingsPageLayout(){}
@@ -55,7 +55,8 @@ public class SettingsPageLayout{
 	}
 	//TODO maybe make the listeners seperate so I can use them for both things?
 	private Listener fieldModifyListener = new Listener() {
-		public void handleEvent(Event e) {
+		public void handleEvent(Event e) 
+		{
 			validAndComplete = validatePage();
 		}
 	};
@@ -82,17 +83,23 @@ public class SettingsPageLayout{
 	};
 
 	// Adds buttons
-	public void draw(Composite parent) {
+	public void draw(Composite composite) {
 
 		// create the composite to hold the widgets
-		Composite composite = new Composite(parent, SWT.NULL);
 		GridData gd;
 		// create the desired layout for this wizard page
 		GridLayout gl = new GridLayout();
 		int ncol = 4;
 		gl.numColumns = ncol;
 		composite.setLayout(gl);
-
+		
+		cb = new Text(composite,SWT.None);
+		cb.setVisible(false);
+		cb.setEnabled(false);
+		gd = new GridData();
+		gd.horizontalSpan = 0;
+		cb.setLayoutData(gd);
+		
 		createLabel(composite, ncol, "Environment Settings"); //$NON-NLS-1$
 		// **********************************************************************************
 		// ************************** Arduino Environment
@@ -220,10 +227,10 @@ public class SettingsPageLayout{
 		}
 		setEditableFields();
 		validAndComplete = validatePage();
-
 		Dialog.applyDialogFont(composite);
 	}
 
+	//TODO doesn't reset the upload baud (posibly others)
 	public void setToDefaults() {
 
 		// check that a is the correct arduino path
@@ -389,6 +396,8 @@ public class SettingsPageLayout{
 					&& getUploadProtocall() != "" && getUploadBaud() != ""; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		//setWarnings();
+		cb.setText(valid ? "true":"false");
+
 		return valid;
 	}
 

@@ -1,75 +1,24 @@
 package arduinoplugin.pages;
 
-import java.io.File;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
-
-import arduinoplugin.base.PluginBase;
-import arduinoplugin.base.SettingsManager;
-import arduinoplugin.base.Target;
 
 public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 
 	final Shell shell = new Shell();
+	
+	private SettingsPageLayout spl= new SettingsPageLayout();
 
-	private Text ArduinoPathInput;
-	private Button BrowseButton;
-	private Combo BoardType;
-	private Combo Optimize;
-	private Combo ProcessorCombo;
-	private Text ProcessorFrequency;
-	private Combo UploadProtocall;
-	private Combo UploadBaud;
-
-	private String ArduinoPath;
-	private String boardtxtPath;
-	private Set<String> Boards = new HashSet<String>();
-	private String[] Processors;
-
-	private Listener fieldModifyListener = new Listener() {
-		public void handleEvent(Event e) {
-			setPageComplete(validatePage());
-		}
-	};
-
-	private Listener pathModifyListener = new Listener() {
-		public void handleEvent(Event e) {
-			if (arduinoPathIsValid()) {
-				ArduinoPath = ArduinoPathInput.getText();
-				boardtxtPath = ArduinoPath + File.separator + "hardware" //$NON-NLS-1$
-						+ File.separator + "arduino"; //$NON-NLS-1$
-				loadBoards();
-			}
-			setEditableFields();
-			setPageComplete(validatePage());
-		}
-	};
-
-	private Listener BoardModifyListener = new Listener() {
-		public void handleEvent(Event e) {
-			setEditableFields();
-			setOptionsForBoard();
-			setPageComplete(validatePage());
+	private Listener completeListener = new Listener() {
+		public void handleEvent(Event e) 
+		{
+			setPageComplete(spl.isPageComplete());
 		}
 	};
 
@@ -86,8 +35,15 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 
 	// Adds buttons and shit to the page
 	@Override
-	public void createControl(Composite parent) {
-
+	public void createControl(Composite parent) 
+	{
+		Composite composite = new Composite(parent, SWT.NULL);
+		spl.draw(composite);
+		setControl(composite);
+		spl.cb.addListener(SWT.Modify, completeListener);
+		
+	}
+/*
 		// create the composite to hold the widgets
 		Composite composite = new Composite(parent, SWT.NULL);
 		initializeDialogUnits(parent);
@@ -271,131 +227,33 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
 		gridData.horizontalSpan = ncol;
 		line.setLayoutData(gridData);
-	}
+	}*/
 
 	public String getArduinoPath() {
-		if (ArduinoPathInput == null)
-			return ""; //$NON-NLS-1$
-		return ArduinoPathInput.getText().trim();
+		return spl.getArduinoPath();
 	}
 
 	public String getBoardType() {
-		if (BoardType == null)
-			return ""; //$NON-NLS-1$
-		return BoardType.getText().trim();
+		return spl.getBoardType();
 	}
 
 	public String getFrequency() {
-		if (ProcessorFrequency == null)
-			return ""; //$NON-NLS-1$
-		return ProcessorFrequency.getText().trim();
+		return spl.getFrequency();
 	}
 
 	public String getOptimizeSetting() {
-		if (Optimize == null)
-			return ""; //$NON-NLS-1$
-		return Optimize.getText().trim();
+		return spl.getOptimizeSetting();
 	}
 
 	public String getProcessor() {
-		if (ProcessorCombo == null)
-			return ""; //$NON-NLS-1$
-		return ProcessorCombo.getText().trim();
+		return spl.getProcessor();
 	}
 
 	public String getUploadBaud() {
-		if (UploadBaud == null)
-			return ""; //$NON-NLS-1$
-		return UploadBaud.getText().trim();
+		return spl.getUploadBaud();
 	}
 
 	public String getUploadProtocall() {
-		if (UploadProtocall == null)
-			return ""; //$NON-NLS-1$
-		return UploadProtocall.getText().trim();
+		return spl.getUploadProtocall();
 	}
-
-	/**
-	 * Sets which fields are editable by the user if arduino path isn't valid,
-	 * none are editable. else, if board is custom, board settings become
-	 * editablle as well
-	 */
-	private void setEditableFields() {
-		boolean e = arduinoPathIsValid();
-		BoardType.setEnabled(e);
-		Optimize.setEnabled(e);
-		if (e)
-			setOptionsForBoard();
-		boolean f = e && getBoardType().equals("Custom"); //$NON-NLS-1$
-		ProcessorCombo.setEnabled(f);
-		ProcessorFrequency.setEnabled(f);
-		UploadProtocall.setEnabled(f);
-		UploadBaud.setEnabled(f);
-	}
-
-	private void loadBoards() {
-		// PluginBase should always have a valid arduinopath if this is called
-		Target t = new Target(new File(boardtxtPath));
-		Map<String, Map<String, String>> m = t.getBoards();
-		for (String s : m.keySet()) {
-			if (s != null)
-				Boards.add(m.get(s).get("name")); //$NON-NLS-1$
-		}
-		Boards.add("Custom"); //$NON-NLS-1$
-		String[] sBoards = new String[Boards.size()];
-		Boards.toArray(sBoards);
-		BoardType.setItems(sBoards);
-	}
-
-	/**
-	 * Sets the uneditable items for a given board automatically
-	 */
-	private void setOptionsForBoard() {
-		Target t = new Target(new File(boardtxtPath));
-		String mapName = t.getBoardNamed(getBoardType());
-		Map<String, String> settings = t.getBoardSettings(mapName);
-		if (settings != null) {
-			ProcessorCombo.setText(settings.get(SettingKeys.ProcessorTypeKey));
-			ProcessorFrequency.setText(settings.get(SettingKeys.FrequencyKey));
-			UploadBaud.setText(settings.get(SettingKeys.UploadSpeedKey));
-			UploadProtocall.setText(settings.get(SettingKeys.UploadProtocolKey));
-
-		}
-	}
-
-	private void setWarnings() {
-		if (!arduinoPathIsValid())
-			setErrorMessage("Arduino Path is not valid"); //$NON-NLS-1$
-		setMessage(null);
-	}
-
-	/**
-	 * Checks that the arduino path is valid, and if all custom fields are
-	 * filled in
-	 * <p>
-	 * Also sets page warnings and errors
-	 * 
-	 * @return true if the page is valid, and false otherwise
-	 */
-	private boolean validatePage() {
-		boolean valid = true;
-		if (!arduinoPathIsValid()) { // check arduino path is correct
-			valid = false;
-		}
-		if (getBoardType().equals("Custom")) { //$NON-NLS-1$
-			valid = valid && getProcessor() != "" && getFrequency() != "" //$NON-NLS-1$ //$NON-NLS-2$
-					&& getUploadProtocall() != "" && getUploadBaud() != ""; //$NON-NLS-1$ //$NON-NLS-2$
-		}
-		setWarnings();
-		return valid;
-	}
-
-	/**
-	 * @return true if arduino.exe is found in the arduino path textbox
-	 */
-	private boolean arduinoPathIsValid() {
-		File arduino = new File(ArduinoPathInput.getText(), "arduino.exe"); //$NON-NLS-1$
-		return arduino.exists();
-	}
-
 }
