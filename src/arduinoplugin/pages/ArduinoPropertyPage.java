@@ -62,6 +62,8 @@ public class ArduinoPropertyPage extends PropertyPage
 			SettingsManager.saveBothSetting(SettingKeys.ProcessorTypeKey,s.getProcessor(),p);
 			SettingsManager.saveBothSetting(SettingKeys.UploadProtocolKey,s.getUploadProtocall(),p);
 			SettingsManager.saveBothSetting(SettingKeys.UploadSpeedKey,s.getUploadBaud(),p);
+			SettingsManager.saveWorkspaceSetting(SettingKeys.ProgrammerKey, s.getUploadUsing());
+			SettingsManager.saveWorkspaceSetting(SettingKeys.UploadPort, s.getUploadPort());
 		}
 		return isValid();
 	}

@@ -50,18 +50,15 @@ public class AvrdudeUploader extends Uploader {
 	public boolean uploadUsingPreferences(String buildPath, String className,
 			boolean verbose,IProject thisProj) throws RunnerException, SerialException {
 		this.verbose = verbose;
-		// Map<String, String> boardPreferences = Base.getBoardPreferences();
-
 		// Gets project setting falls back on workspace setting
-		String uploadUsing = "bootloader";//SettingsManager.getSetting("upload.using", //$NON-NLS-1$
-				//thisProj);
+		String uploadUsing = SettingsManager.getSetting(SettingKeys.ProgrammerKey,thisProj);
 
-		if (uploadUsing.equals("bootloader")) { //$NON-NLS-1$
+		if (uploadUsing.equals("Bootloader")) { //$NON-NLS-1$
 			return uploadViaBootloader(buildPath, className, thisProj);
 		} 
 		else
 		{
-			System.out.print("UPLOAD USING BOOTLOADER IS THE ONLY SUPPORTED UPLOAD METHOD"); //$NON-NLS-1$
+			System.out.print("UPLOAD USING BOOTLOADER IS THE ONLY SUPPORTED UPLOAD METHOD AT THIS TIME"); //$NON-NLS-1$
 			return false;
 //		 Target t;
 //		

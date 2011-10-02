@@ -35,7 +35,9 @@ import gnu.io.SerialPortEventListener;
 import java.io.*;
 import java.util.*;
 
+import arduinoplugin.base.SettingsManager;
 import arduinoplugin.builders.MessageConsumer;
+import arduinoplugin.pages.SettingKeys;
 
 @SuppressWarnings("all")
 public class Serial implements SerialPortEventListener {
@@ -78,7 +80,11 @@ public class Serial implements SerialPortEventListener {
 //  }
     
   public Serial() throws SerialException {
-	  this("COM3",9600,'N',8,1);
+	  this(SettingsManager.getSetting(SettingKeys.UploadPort, null),
+			  9600,
+			  'N',
+			  8,
+			  1);
 
 //    this(Preferences.get("serial.port"),
 //      Preferences.getInteger("serial.debug_rate"),

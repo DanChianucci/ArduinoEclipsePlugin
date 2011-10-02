@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Text;
 import arduinoplugin.base.PluginBase;
 import arduinoplugin.base.SettingsManager;
 import arduinoplugin.base.Target;
+import arduinoplugin.uploader.Serial;
 
 public class SettingsPageLayout{
 
@@ -34,33 +35,30 @@ public class SettingsPageLayout{
 	private Combo Optimize;
 	private Combo ProcessorCombo;
 	private Text ProcessorFrequency;
+	private Combo UploadUsing;
 	private Combo UploadProtocall;
 	private Combo UploadBaud;
+	private Combo UploadPort;
+	
 	public Text cb; // so other classes can listen if complete or not
 
 	private String ArduinoPath;
 	private String boardtxtPath;
 	private Set<String> Boards = new HashSet<String>();
+	private Set<String> Programmers = new HashSet<String>();
 	private String[] Processors;
-
+	private String[] NoPortError = {"No COM Ports Found","Enter Manually","Or plug in Arduino"};
 	public boolean validAndComplete;
 	
 	
-	SettingsPageLayout(){}
-	
-	
-	public boolean isPageComplete()
-	{
-		return validAndComplete;
-	}
-	//TODO maybe make the listeners seperate so I can use them for both things?
 	private Listener fieldModifyListener = new Listener() {
 		public void handleEvent(Event e) 
 		{
 			validAndComplete = validatePage();
 		}
 	};
-
+	
+	
 	private Listener pathModifyListener = new Listener() {
 		public void handleEvent(Event e) {
 			if (arduinoPathIsValid()) {
@@ -68,12 +66,12 @@ public class SettingsPageLayout{
 				boardtxtPath = ArduinoPath + File.separator + "hardware" //$NON-NLS-1$
 						+ File.separator + "arduino"; //$NON-NLS-1$
 				loadBoards();
+				loadProgrammers();
 			}
 			setEditableFields();
 			validAndComplete = validatePage();
 		}
 	};
-
 	private Listener BoardModifyListener = new Listener() {
 		public void handleEvent(Event e) {
 			setEditableFields();
@@ -81,6 +79,42 @@ public class SettingsPageLayout{
 			validAndComplete = validatePage();
 		}
 	};
+
+	private Listener progListener = new Listener() {
+		public void handleEvent(Event e) {
+			setEditableFields();
+			setOptionsForProgrammer();
+			validAndComplete = validatePage();
+		}
+	};
+
+	SettingsPageLayout(){}
+
+	/**
+	 * TODO arduino.exe is windows only...change to check for something else
+	 * @return true if arduino.exe is found in the arduino path textbox
+	 */
+	private boolean arduinoPathIsValid() {
+		File arduino = new File(ArduinoPathInput.getText(), "arduino.exe"); //$NON-NLS-1$
+		return arduino.exists();
+	}
+	private void createLabel(Composite parent, int ncol, String t) {
+		Label line = new Label(parent, SWT.HORIZONTAL | SWT.BOLD);
+		line.setText(t);
+		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
+		gridData.horizontalSpan = ncol;
+		line.setLayoutData(gridData);
+
+	}
+
+	private void createLine(Composite parent, int ncol) {
+		Label line = new Label(parent, SWT.SEPARATOR | SWT.HORIZONTAL
+				| SWT.BOLD);
+		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
+		gridData.horizontalSpan = ncol;
+		line.setLayoutData(gridData);
+	}
+
 
 	// Adds buttons
 	public void draw(Composite composite) {
@@ -170,7 +204,7 @@ public class SettingsPageLayout{
 		gd.grabExcessHorizontalSpace = true;
 		ProcessorCombo.setLayoutData(gd);
 		Processors = PluginBase.getProcessorArray();
-		ProcessorCombo.setItems(Processors);// TODO Make better list
+		ProcessorCombo.setItems(Processors);
 		ProcessorCombo.addListener(SWT.Selection, fieldModifyListener);
 		ProcessorCombo.setEnabled(false);
 
@@ -187,20 +221,46 @@ public class SettingsPageLayout{
 		ProcessorFrequency.addListener(SWT.Modify, fieldModifyListener);
 		ProcessorFrequency.setEnabled(false);
 
-		createLine(composite, ncol);
-		createLabel(composite, ncol, "Upload Settings"); //$NON-NLS-1$
+
 
 		// **********************************************************************************
 		// ***************************** Upload Protocall
 		// *********************************
 		// **********************************************************************************
 
+		createLine(composite, ncol);
+		createLabel(composite, ncol, "Upload Settings"); //$NON-NLS-1$
+		
+		new Label(composite,SWT.None).setText("Upload Using:");
+		UploadUsing = new Combo(composite, SWT.BORDER | SWT.READ_ONLY);
+		gd = new GridData();
+		gd.horizontalAlignment = SWT.FILL;
+		UploadUsing.setLayoutData(gd);
+		UploadUsing.addListener(SWT.Selection, progListener);
+		UploadUsing.setEnabled(false);
+		
+		new Label(composite,SWT.None).setText("Port: ");
+		UploadPort = new Combo(composite, SWT.BORDER);
+		gd = new GridData();
+		gd.horizontalAlignment = SWT.FILL;
+		UploadPort.setLayoutData(gd);
+		UploadPort.addListener(SWT.Modify, fieldModifyListener);
+		String s[]=Serial.list();
+		if(s.length>0){
+			UploadPort.setItems(s);
+		}
+		else
+		{
+			UploadPort.setItems(NoPortError);
+		}
+		UploadPort.setEnabled(false);
+		
 		new Label(composite, SWT.NONE).setText("Upload Protocall:"); //$NON-NLS-1$
 		UploadProtocall = new Combo(composite, SWT.BORDER | SWT.READ_ONLY);
 		gd = new GridData();
 		gd.horizontalAlignment = SWT.FILL;
 		UploadProtocall.setLayoutData(gd);
-		String Protocalls[] = { "stk500", "stk500v2" }; //$NON-NLS-1$ //$NON-NLS-2$
+		String Protocalls[] = { "stk500","stk500v1", "stk500v2" }; //$NON-NLS-1$ //$NON-NLS-2$
 		UploadProtocall.setItems(Protocalls);
 		UploadProtocall.addListener(SWT.Selection, fieldModifyListener);
 		UploadProtocall.setEnabled(false);
@@ -228,62 +288,6 @@ public class SettingsPageLayout{
 		setEditableFields();
 		validAndComplete = validatePage();
 		Dialog.applyDialogFont(composite);
-	}
-
-	//TODO doesn't reset the upload baud (posibly others)
-	public void setToDefaults() {
-
-		// check that a is the correct arduino path
-		pathModifyListener.handleEvent(new Event());
-		if (arduinoPathIsValid()) {// if it is the correct path
-			String lastBoard = SettingsManager.getSetting(SettingKeys.BoardTypeKey, null);
-			if (lastBoard != null)
-			{
-				BoardType.setText(lastBoard);
-				if (lastBoard.equals("Custom")) {
-					String lastProc = SettingsManager.getSetting(SettingKeys.ProcessorTypeKey, null);
-					ProcessorCombo.setText(lastProc);
-					String lastFreq = SettingsManager.getSetting(SettingKeys.FrequencyKey,
-							null);
-					if (lastFreq != null)
-						ProcessorFrequency.setText(lastFreq);
-					String lastProt = SettingsManager.getSetting(
-							SettingKeys.UploadProtocolKey, null);
-					if (lastProt != null)
-						UploadProtocall.setText(lastProt);
-					String lastBaud = SettingsManager.getSetting(SettingKeys.UploadSpeedKey,
-							null);
-					if (lastBaud != null)
-						UploadBaud.setText(lastBaud);
-				}
-				else
-					setOptionsForBoard();
-			}
-			String opt = SettingsManager.getSetting(SettingKeys.OptimizeKey, null);
-			if (opt != null)
-				Optimize.setText(opt);
-
-		}
-	
-		
-	}
-
-
-	private void createLabel(Composite parent, int ncol, String t) {
-		Label line = new Label(parent, SWT.HORIZONTAL | SWT.BOLD);
-		line.setText(t);
-		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
-		gridData.horizontalSpan = ncol;
-		line.setLayoutData(gridData);
-
-	}
-
-	private void createLine(Composite parent, int ncol) {
-		Label line = new Label(parent, SWT.SEPARATOR | SWT.HORIZONTAL
-				| SWT.BOLD);
-		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
-		gridData.horizontalSpan = ncol;
-		line.setLayoutData(gridData);
 	}
 
 	public String getArduinoPath() {
@@ -321,29 +325,46 @@ public class SettingsPageLayout{
 			return ""; //$NON-NLS-1$
 		return UploadBaud.getText().trim();
 	}
-
+	
 	public String getUploadProtocall() {
 		if (UploadProtocall == null)
 			return ""; //$NON-NLS-1$
 		return UploadProtocall.getText().trim();
 	}
 
-	/**
-	 * Sets which fields are editable by the user if arduino path isn't valid,
-	 * none are editable. else, if board is custom, board settings become
-	 * editablle as well
-	 */
-	private void setEditableFields() {
-		boolean e = arduinoPathIsValid();
-		BoardType.setEnabled(e);
-		Optimize.setEnabled(e);
-		if (e)
-			setOptionsForBoard();
-		boolean f = e && getBoardType().equals("Custom");
-		ProcessorCombo.setEnabled(f);
-		ProcessorFrequency.setEnabled(f);
-		UploadProtocall.setEnabled(f);
-		UploadBaud.setEnabled(f);
+	public String getUploadUsing()
+	{
+		if (UploadUsing == null)
+			return ""; //$NON-NLS-1$
+		return UploadUsing.getText().trim();
+	}
+	
+	public String getUploadPort()
+	{
+		if(UploadPort==null)
+		{
+			return "";
+		}
+		else//So that the error message doesn't get saved as the setting
+		{
+			boolean b = false;
+			for(int i=0;i<NoPortError.length;i++)
+			{
+				if(UploadPort.getText().equals(NoPortError[i]))
+					b=true;
+			}
+			System.out.print(b);
+			if(b)
+			{
+				return "";
+			}
+		}
+		return UploadPort.getText().trim();
+	}
+
+	public boolean isPageComplete()
+	{
+		return validAndComplete;
 	}
 
 	private void loadBoards() {
@@ -360,6 +381,42 @@ public class SettingsPageLayout{
 		BoardType.setItems(sBoards);
 	}
 
+	private void loadProgrammers()
+	{
+		Target t = new Target(new File(boardtxtPath));
+		Map<String, Map<String, String>> m = t.getProgrammers();
+		for (String s : m.keySet()) {
+			if (s != null)
+				Programmers.add(m.get(s).get(SettingKeys.BoardNameKey));
+		}
+		Programmers.add("Bootloader");
+		String[] sProgrammers = new String[Programmers.size()];
+		Programmers.toArray(sProgrammers);
+		UploadUsing.setItems(sProgrammers);
+	}
+	
+	/**
+	 * Sets which fields are editable by the user if arduino path isn't valid,
+	 * none are editable. else, if board is custom, board settings become
+	 * editablle as well
+	 */
+	private void setEditableFields() {
+		boolean e = arduinoPathIsValid();
+		BoardType.setEnabled(e);
+		Optimize.setEnabled(e);
+		UploadPort.setEnabled(e);
+		
+		boolean f = e && getBoardType().equals("Custom");
+		ProcessorCombo.setEnabled(f);
+		ProcessorFrequency.setEnabled(f);
+		
+		//TODO enable upload using something other than bootloader
+		UploadUsing.setEnabled(e);
+		boolean g = f && getUploadUsing().equals("Bootloader");
+		UploadProtocall.setEnabled(g);
+		UploadBaud.setEnabled(g);
+	}
+
 	/**
 	 * Sets the uneditable items for a given board automatically
 	 */
@@ -371,16 +428,94 @@ public class SettingsPageLayout{
 		if (settings != null) {
 			ProcessorCombo.setText(settings.get(SettingKeys.ProcessorTypeKey));
 			ProcessorFrequency.setText(settings.get(SettingKeys.FrequencyKey));
-			UploadBaud.setText(settings.get(SettingKeys.UploadSpeedKey));
-			UploadProtocall.setText(settings.get(SettingKeys.UploadProtocolKey));
+			if(getUploadUsing().equals("Bootloader"))
+			{
+				UploadBaud.setText(settings.get(SettingKeys.UploadSpeedKey));
+				UploadProtocall.setText(settings.get(SettingKeys.UploadProtocolKey));
+			}
+			else
+			{
+				setOptionsForProgrammer();
+			}
 		}
 	}
+
+	private void setOptionsForProgrammer() {
+		if(getUploadUsing().equals("Bootloader")&& !getBoardType().equals("Custom"))
+		{
+			setOptionsForBoard();
+		}
+		else
+		{
+			Target t = new Target(new File(boardtxtPath));
+			String prog = t.getProgrammerNamed(getUploadUsing());
+			Map<String,String> settings= t.getProgrammerSettings(prog);
+			if(settings!=null)
+			{
+				//TODO when implementing upload via programmer... remember that these have different 
+				//keys than what they are saved to
+				String s = settings.get(SettingKeys.ProgrammerSpeedKey);
+				if(s==null)
+					s="";
+				UploadBaud.setText(s);
+				s=settings.get(SettingKeys.ProgrammerProtocolKey);
+				if(s==null)
+					s="";
+				UploadProtocall.setText(s);
+				
+			}
+		}
+		
+	}
+
 
 //	private void setWarnings() {
 //		if (!arduinoPathIsValid())
 //			setErrorMessage("Arduino Path is not valid");
 //		setMessage(null);
 //	}
+
+	public void setToDefaults() {
+
+		// check that a is the correct arduino path
+		pathModifyListener.handleEvent(new Event());
+		if (arduinoPathIsValid()) {// if it is the correct path
+			String lastBoard = SettingsManager.getSetting(SettingKeys.BoardTypeKey, null);
+			if (lastBoard != null)
+			{
+				BoardType.setText(lastBoard);
+				if (lastBoard.equals("Custom")) {
+					String lastProc = SettingsManager.getSetting(SettingKeys.ProcessorTypeKey, null);
+					ProcessorCombo.setText(lastProc);
+					String lastFreq = SettingsManager.getSetting(SettingKeys.FrequencyKey,
+							null);
+					if (lastFreq != null)
+						ProcessorFrequency.setText(lastFreq);
+					
+					String lastProgrammer = SettingsManager.getSetting(SettingKeys.ProgrammerKey, null);
+					if(lastProgrammer!=null)
+						UploadUsing.setText(lastProgrammer);
+					
+					String lastProt = SettingsManager.getSetting(SettingKeys.UploadProtocolKey, null);					
+					if (lastProt != null)
+						UploadProtocall.setText(lastProt); 
+					
+					String lastBaud = SettingsManager.getSetting(SettingKeys.UploadSpeedKey,null);
+					if (lastBaud != null)
+						UploadBaud.setText(lastBaud);
+				}
+				else
+					UploadUsing.setText("Bootloader");
+					setOptionsForBoard();
+			}
+			String opt = SettingsManager.getSetting(SettingKeys.OptimizeKey, null);
+			if (opt != null)
+				Optimize.setText(opt);
+
+		}
+	
+		
+	}
 
 	/**
 	 * Checks that the arduino path is valid, and if all custom fields are
@@ -398,15 +533,6 @@ public class SettingsPageLayout{
 		cb.setText(valid ? "true":"false");
 
 		return valid;
-	}
-
-	/**
-	 * TODO arduino.exe is windows only...change to check for something else
-	 * @return true if arduino.exe is found in the arduino path textbox
-	 */
-	private boolean arduinoPathIsValid() {
-		File arduino = new File(ArduinoPathInput.getText(), "arduino.exe"); //$NON-NLS-1$
-		return arduino.exists();
 	}
 
 }

@@ -91,7 +91,9 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
 	    SettingsManager.saveBothSetting(SettingKeys.FrequencyKey,_pageTwo.getFrequency(),p);
 	    SettingsManager.saveBothSetting(SettingKeys.ProcessorTypeKey,_pageTwo.getProcessor(),p);
 	    SettingsManager.saveBothSetting(SettingKeys.UploadProtocolKey,_pageTwo.getUploadProtocall(),p);
-	    SettingsManager.saveBothSetting(SettingKeys.UploadSpeedKey,_pageTwo.getUploadBaud(),p);	    
+	    SettingsManager.saveBothSetting(SettingKeys.UploadSpeedKey,_pageTwo.getUploadBaud(),p);
+	    SettingsManager.saveWorkspaceSetting(SettingKeys.ProgrammerKey, _pageTwo.getUploadUsing());
+	    SettingsManager.saveWorkspaceSetting(SettingKeys.UploadPort, _pageTwo.getUploadPort());
 	    BasicNewProjectResourceWizard.updatePerspective(_configurationElement);
 	    
 	    return true;

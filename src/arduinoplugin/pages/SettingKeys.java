@@ -4,6 +4,10 @@ import org.eclipse.osgi.util.NLS;
 
 public class SettingKeys extends NLS {
 	private static final String BUNDLE_NAME = "arduinoplugin.pages.SettingKeys"; //$NON-NLS-1$
+	public static String UploadPort;
+	public static String ProgrammerProtocolKey;
+	public static String ProgrammerSpeedKey;
+	public static String ProgrammerKey;
 	public static String uploadVerboseKey;
 	public static String disableFlushingKey;
 	public static String BoardNameKey;

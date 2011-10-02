@@ -70,4 +70,12 @@ public class ArduinoSettingsPage extends WizardPage implements IWizardPage {
 	public String getUploadProtocall() {
 		return spl.getUploadProtocall();
 	}
+
+	public String getUploadUsing() {
+		return spl.getUploadUsing();
+	}
+
+	public String getUploadPort() {
+		return spl.getUploadPort();
+	}
 }

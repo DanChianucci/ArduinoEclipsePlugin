@@ -105,6 +105,16 @@ public class Target {
 	{
 		return boards.get(board);		
 	}
+	/**
+	 * @param programmer the name of the programmer to get settings for
+	 * @return the settings to which the specified programmer is mapped, 
+	 * 			or null if this map contains no mapping for the programmer
+	  *			Map&ltKEY,VALUE&gt
+	 */
+	public Map<String,String> getProgrammerSettings(String programmer)
+	{
+		return programmers.get(programmer);		
+	}
 
 	
 	/**
@@ -206,4 +216,22 @@ public class Target {
 		return null;
 	}
 	
+	/**
+	 * Returns the mapped name of the programmer which has a name value of the given string
+	 * @param programmerName	the name of the board, to get the base name of 
+	 * @return the base name of the programmer that has the name equal to programmerName
+	 */
+	public String getProgrammerNamed(String programmerName) 
+	{
+		for(Entry<String,Map<String,String>> entry : programmers.entrySet())
+		{
+			for(Entry<String,String> e2: entry.getValue().entrySet())
+			{
+				if(e2.getValue().equals(programmerName))
+					return entry.getKey();
+			}
+					
+		}
+		return null;
+	}
 }

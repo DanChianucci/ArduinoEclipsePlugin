@@ -65,7 +65,6 @@ public class DropDownHandler extends AbstractHandler {
 		}
 		  	arduinoProjects.add(p);
 	  }
-
 	return arduinoProjects.get(0);
   }
 }
