@@ -13,13 +13,8 @@ in the dropins folder of any eclipse install (indigo or later
 
 Press new Project, and select arduino project.  The first page of the wizard is self explanatory.
 The second page of the wizard must be filled in.
-    -The location of the arduino install must be specified 
-        -Notice that the incorrect path warning will not disapear, but the finish button will work)
-    -the board type (currently only uno, and custom supported)
-        - if custom is selected, the processor type and frequency must be filled in.
-        -Although the uploading stuff is unused as of yet, you must fill those in as well
-            (just pick whatever).
-    -write your source code in the text editor, save, and press build project.
+
+
 
 
 
@@ -32,8 +27,12 @@ Eventule Features include:
 	Arduino Builder						-Completed
 	Editor for pde files				-Started (just have to add keyword highlighting)
 	Saved preferences					-Completed
-	Uploader							-Can Upload project to COM3
+	Uploader							-Can Upload project
 
+Limitations as of now:
+	-Upload COM must be chosen before you upload (in properties)
+	-Only one Project per workspace
+	-
 	
 New Arduino Project Wizard:
 	Page 1:	 -The user will be able to enter a name for the project and the workspace 

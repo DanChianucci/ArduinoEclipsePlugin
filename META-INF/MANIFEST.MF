@@ -41,6 +41,35 @@ Export-Package: arduinoplugin;uses:="org.eclipse.ui.plugin,org.osgi.framework",
    org.eclipse.jface.viewers",
  gnu.io
 Bundle-ClassPath: lib/RXTXcomm.jar
-Bundle-NativeCode: lib/Nativelib/rxtxParallel.dll;
- lib/nativelib/rxtxSerial.dll;
- osname=Win32; processor=x86-64
+Bundle-NativeCode: lib/nativelib/Windows/64Bit/rxtxParallel.dll;
+ lib/nativelib/Windows/64Bit/rxtxSerial.dll;
+ osname=Win32; processor=x86-64,
+ 
+ 
+ lib/nativelib/Linux/i686-unknown-linux-gnu/librxtxParallel.so;
+ lib/nativelib/Linux/i686-unknown-linux-gnu/librxtxSerial.so;
+ osname=Linux; processor=x86,
+ 
+ lib/nativelib/Linux/ia64-unknown-linux-gnu/librxtxSerial.so;
+ osname=Linux; processor=ia64,
+ 
+ lib/nativelib/Linux/x86_64-unknown-linux-gnu/librxtxSerial.so;
+ osname=Linux; processor=x86-64,
+ 
+  
+ lib/nativelib/Mac_OS_X/librxtxSerial.jnilib;
+ osname=Mac OS X; processor=x86; processor=PowerPC; processor=x86-64,
+ 
+ 
+ lib/nativelib/Solaris/sparc-solaris/sparc32-sun-solaris2.8/librxtxSerial-2.1-7.so;
+ lib/nativelib/Solaris/sparc-solaris/sparc32-sun-solaris2.8/librxtxSerial.so;
+ osname=Solaris; processor=Sparc,
+ 
+ lib/nativelib/Solaris/sparc-solaris/sparc64-sun-solaris2.8/librxtxSerial-2.1-7.so;
+ lib/nativelib/Solaris/sparc-solaris/sparc64-sun-solaris2.8/librxtxSerial.so;
+ osname=Solaris; processor=Sparc64,
+ 
+ 
+ lib/nativelib/Windows/i368-mingw32/rxtxParallel.dll;
+ lib/nativelib/Windows/i368-mingw32/rxtxSerial.dll;
+ osname=Win32; processor=x86
