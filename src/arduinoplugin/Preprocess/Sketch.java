@@ -49,7 +49,7 @@ public class Sketch {
 	static private File OutputFolder;
 
 	/** List of library folders. */
-	ArrayList<File> importedLibraries;
+	private ArrayList<File> importedLibraries;
 
 	/** main pde file for this sketch. */
 	private File primaryFile;
@@ -368,11 +368,11 @@ public class Sketch {
 
 		targetFile.setLastModified(sourceFile.lastModified());
 	}
-
+	
 	// returns the string representing the file's code
 	// taken from
 	// http://stackoverflow.com/questions/326390/how-to-create-a-java-string-from-the-contents-of-a-file
-	private String getProgram(File sc) throws IOException {
+	public static String getProgram(File sc) throws IOException {
 		BufferedReader reader = new BufferedReader(new FileReader(sc));
 		String line = null;
 		StringBuilder stringBuilder = new StringBuilder();

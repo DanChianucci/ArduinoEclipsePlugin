@@ -6,7 +6,8 @@ public class Editor extends TextEditor {
 
 	private ColorManager colorManager;
 
-	public Editor() {
+	public Editor() 
+	{
 		super();
 		colorManager = new ColorManager();
 		setSourceViewerConfiguration(new Configuration(colorManager));

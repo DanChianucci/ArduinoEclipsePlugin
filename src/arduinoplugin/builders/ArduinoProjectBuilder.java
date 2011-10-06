@@ -25,7 +25,8 @@ public class ArduinoProjectBuilder extends IncrementalProjectBuilder {
 
 	String outputFolder = "bin";
 
-	private String getOutputPath() {
+	private String getOutputPath() 
+	{
 		return ResourcesPlugin.getWorkspace().getRoot().getLocation()
 				.toOSString()
 				+ getProject().getFullPath().makeAbsolute().toOSString()
@@ -51,6 +52,7 @@ public class ArduinoProjectBuilder extends IncrementalProjectBuilder {
 			folder.create(false, true, null);
 		}
 		String primaryClass = getPrimaryClass();
+		//TODO allow settings to make build verbose or not
 		boolean verbose = true;
 
 		try {

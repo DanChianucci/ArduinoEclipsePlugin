@@ -140,7 +140,7 @@ public class PdePreprocessor {
    * 
    * Note this function is copied from the PApplet class in the Arduino Source
    */
-  private String[][] matchAll(String what, String regexp) {
+  public static String[][] matchAll(String what, String regexp) {
     Pattern p = Pattern.compile(regexp, Pattern.MULTILINE | Pattern.DOTALL);
     Matcher m = p.matcher(what);
     ArrayList<String[]> results = new ArrayList<String[]>();

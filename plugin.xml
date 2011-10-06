@@ -10,7 +10,7 @@
       <wizard
             category="ArduinoPlugin.ArduinoProjectCategory"
             class="arduinoplugin.wizards.NewProjectWizard"
-            finalPerspective="org.eclipse.cdt.ui.CPerspective"
+            finalPerspective="org.eclipse.jdt.ui.JavaPerspective"
             hasPages="true"
             icon="icons/arduino.gif"
             id="ArduinoPlugin.newProjectWizard"

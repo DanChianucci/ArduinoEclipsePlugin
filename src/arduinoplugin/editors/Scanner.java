@@ -12,9 +12,18 @@ package arduinoplugin.editors;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.text.TextAttribute;
-import org.eclipse.jface.text.rules.*;
+import org.eclipse.jface.text.rules.EndOfLineRule;
+import org.eclipse.jface.text.rules.IRule;
+import org.eclipse.jface.text.rules.IToken;
+import org.eclipse.jface.text.rules.RuleBasedScanner;
+import org.eclipse.jface.text.rules.SingleLineRule;
+import org.eclipse.jface.text.rules.Token;
+import org.eclipse.jface.text.rules.WhitespaceRule;
+import org.eclipse.jface.text.rules.WordRule;
 
 /**
  * A Java code scanner.
@@ -36,6 +45,9 @@ public class Scanner extends RuleBasedScanner {
 	 *            the color provider
 	 */
 	public Scanner(ColorManager provider) {
+		PdeKeywords p = new PdeKeywords(ResourcesPlugin.getWorkspace().getRoot().getProjects()[0]);
+		//TODO send in the file that is curently in the editor
+		Map<String, String> keyWordList = p.getKeywords();
 
 		IToken keyword = new Token(new TextAttribute(
 				provider.getColor(IColorConstants.KEYWORD)));
@@ -62,13 +74,23 @@ public class Scanner extends RuleBasedScanner {
 
 		// Add word rule for keywords, types, and constants.
 		WordRule wordRule = new WordRule(new WordDetector(), other);
-		
+
 		for (int i = 0; i < fgKeywords.length; i++)
 			wordRule.addWord(fgKeywords[i], keyword);
 		for (int i = 0; i < fgTypes.length; i++)
 			wordRule.addWord(fgTypes[i], type);
 		for (int i = 0; i < fgConstants.length; i++)
 			wordRule.addWord(fgConstants[i], type);
+		for (String key : keyWordList.keySet()) {
+			String keyWord = keyWordList.get(key);
+			if (keyWord.equals(PdeKeywords.KEYWORD1)
+					|| keyWord.equals(PdeKeywords.KEYWORD2)
+					|| keyWord.equals(PdeKeywords.KEYWORD3))
+				wordRule.addWord(key, keyword);
+			else if (keyWord.equals(PdeKeywords.LITERAL1)
+					|| keyWord.equals(PdeKeywords.LITERAL2))
+				wordRule.addWord(key, type);
+		}
 		rules.add(wordRule);
 
 		IRule[] result = new IRule[rules.size()];

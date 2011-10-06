@@ -22,6 +22,7 @@ public class Configuration extends SourceViewerConfiguration {
 	 *reconciles the presentation
 	 */
 	public Configuration(ColorManager colorManager) {
+		super();
 		this.colorManager = colorManager;
 	}
 

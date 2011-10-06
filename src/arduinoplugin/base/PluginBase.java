@@ -103,7 +103,7 @@ public class PluginBase {
 	 * 
 	 * @param imported
 	 *            the imported file to be found
-	 * @param the
+	 * @param project the
 	 *            current project folder
 	 * @return the File corresponding to the folder in which the header resides
 	 */
